@@ -14,6 +14,8 @@
       direnv.enable = true;
       devenv.enable = true;
       proton-pass.enable = true;
+      ms-teams.enable = true;
+      only-office.enable = true;
       ai = {
         claude.enable = true;
         codex.enable = true;
@@ -25,12 +27,12 @@
         containers = {
           default = {
             id = 1;
-            color = "pink";
-            icon = "fruit";
+            color = "blue";
+            icon = "fingerprint";
           };
           buuuk = {
             id = 2;
-            color = "orange";
+            color = "red";
             icon = "briefcase";
           };
         };
