@@ -102,11 +102,9 @@
         );
     in
     lib.mkIf opts.enable {
-      programs.firefox = {
+      programs.librewolf = {
         enable = true;
         package = pkgs.librewolf;
-        name = "Librewolf";
-        configPath = "${config.xdg.configHome}/librewolf/librewolf";
         profiles.default = {
           containersForce = true;
           extensions = {
@@ -116,8 +114,7 @@
           };
           inherit containers;
         };
-        wrappedPackageName = "librewolf";
-        policies = {
+        settings = {
           "privacy.clearOnShutdown.offlineApps" = false;
           "privacy.clearOnShutdown_v2.formdata" = true;
           "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
