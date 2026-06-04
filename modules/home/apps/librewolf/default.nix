@@ -47,50 +47,6 @@
   config =
     let
       opts = config.${namespace}.apps.librewolf;
-      containers = lib.mapAttrs (name: value: value // { inherit name; }) opts.containers;
-      extensionsPackages =
-        (with pkgs.firefox-extensions; [ ublock-origin ])
-        ++ (lib.mapAttrsToList (_: value: value.package) opts.extensions);
-      extensionsSettings = {
-        "uBlock0@raymondhill.net" = {
-          settings = {
-            selectedFilterLists = [
-              "ublock-filters"
-              "ublock-badware"
-              "ublock-privacy"
-              "ublock-unbreak"
-              "ublock-quick-fixes"
-              "easylist"
-              "adguard-spyware-url"
-              "easyprivacy"
-              "urlhaus-1"
-              "curben-phishing"
-              "plowe-0"
-              "LegitimateURLShortener"
-            ];
-            "whitelist" = [
-              "chrome-extension-scheme"
-              "moz-extension-scheme"
-            ];
-            "dynamicFilteringString" = ''
-              behind-the-scene * * noop
-              behind-the-scene * inline-script noop
-              behind-the-scene * 1p-script noop
-              behind-the-scene * 3p-script noop
-              behind-the-scene * 3p-frame noop
-              behind-the-scene * image noop
-              behind-the-scene * 3p noop
-            '';
-            "FilteringString" = "";
-            "hostnameSwitchesString" = ''
-              no-large-media: behind-the-scene false
-              no-csp-reports: * true
-            '';
-            "userFilters" = "";
-          };
-        };
-      }
-      // (lib.mapAttrs (_: value: value.settings) opts.extensions);
 
       applyBoolForList =
         bool: list:
@@ -100,6 +56,10 @@
             value = bool;
           }) list
         );
+
+      containers = lib.mapAttrs (n: v: v // { name = n; }) opts.containers;
+      extensionsPackages = lib.mapAttrsToList (_: value: value.package) opts.extensions;
+      extensionsSettings = lib.mapAttrs (_: v: v.settings) opts.extensions;
     in
     lib.mkIf opts.enable {
       programs.librewolf = {
@@ -107,17 +67,31 @@
         package = pkgs.librewolf;
         profiles.default = {
           containersForce = true;
+          isDefault = true;
           extensions = {
             force = true;
+            exactPermissions = true;
             packages = extensionsPackages;
             settings = extensionsSettings;
           };
           inherit containers;
         };
         settings = {
+          "browser.profiles.enabled" = true;
           "privacy.clearOnShutdown.offlineApps" = false;
           "privacy.clearOnShutdown_v2.formdata" = true;
           "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+          "privacy.trackingprotection.enabled" = true;
+          "privacy.trackingprotection.socialtracking.enabled" = true;
+          "privacy.trackingprotection.cryptomining.enabled" = true;
+          "privacy.trackingprotection.fingerprinting.enabled" = true;
+          "privacy.firstparty.isolate" = true;
+          "privacy.query_stripping.enabled" = true;
+          "privacy.query_stripping.strip_list" =
+            "utm_source utm_medium utm_campaign utm_term utm_content fbclid gclid dclid twclid";
+          "webgl.disabled" = true;
+          "geo.enabled" = false;
+          "media.navigator.enabled" = false;
         }
         // (applyBoolForList (opts.persistFingerprint == false) [
           "privacy.clearOnShutdown.cache"
