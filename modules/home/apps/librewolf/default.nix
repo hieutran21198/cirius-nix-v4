@@ -11,37 +11,33 @@
   ];
   options.${namespace}.apps.librewolf = {
     enable = lib.mkEnableOption "Enable librewolf";
+    markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
     persistFingerprint = lib.mkEnableOption "Clear cookies and site data everytime closing librewolf";
-    containers = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (submodule {
-          options = {
-            id = lib.mkOption {
-              type = lib.types.int;
-              default = 1;
-            };
-            color = lib.mkOption { type = lib.types.str; };
-            icon = lib.mkOption { type = lib.types.str; };
+    enableSidebarTabs = lib.mkEnableOption "Enable vertical tab";
+    containers = lib.${namespace}.makeAttrsOption {
+      ofType = lib.types.submodule {
+        options = {
+          id = lib.${namespace}.makeIntOption {
+            nullable = false;
+            default = 0;
           };
-        });
+          color = lib.${namespace}.makeStrOption { };
+          icon = lib.${namespace}.makeStrOption { };
+        };
+      };
       default = { };
-      description = "Profile's containers";
     };
-    extensions = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (submodule {
-          options = {
-            package = lib.mkOption { type = with lib.types; package; };
-            settings = lib.mkOption {
-              type = with lib.types; attrsOf anything;
-              default = { };
-            };
+    extensions = lib.${namespace}.makeAttrsOption {
+      ofType = lib.types.submodule {
+        options = {
+          package = lib.${namespace}.makePackageOption { nullable = false; };
+          settings = lib.${namespace}.makeAttrsOption {
+            nullable = false;
+            default = { };
           };
-        });
+        };
+      };
       default = { };
-      description = "Extensions";
     };
   };
   config =
@@ -78,6 +74,13 @@
         };
         settings = {
           "browser.profiles.enabled" = true;
+          "browser.tabs.groups.enabled" = true;
+          "browser.tabs.allowTabDetach" = true;
+          "browser.tabs.closeWindowWithLastTab" = false;
+          "browser.tabs.groups.smart.enabled" = false;
+          "browser.tabs.groups.smart.userEnabled" = false;
+          "sidebar.verticalTabs" = opts.enableSidebarTabs;
+          "browser.toolbars.bookmarks.visibility" = "never";
           "privacy.clearOnShutdown.offlineApps" = false;
           "privacy.clearOnShutdown_v2.formdata" = true;
           "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
@@ -106,6 +109,12 @@
           "privacy.clearOnShutdown_v2.cookiesAndStorage"
           "privacy.clearOnShutdown_v2.siteSettings"
         ]);
+      };
+
+      ${namespace} = {
+        infra.desktop-manager = {
+          gnome.setFavoriteApps = [ "librewolf.desktop" ];
+        };
       };
     };
 }

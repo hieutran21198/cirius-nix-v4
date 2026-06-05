@@ -12,25 +12,14 @@
   options = {
     ${namespace}.infra.iam = {
       inherit (options.users) groups;
-      users = lib.mkOption {
-        type =
-          with lib.types;
-          attrsOf (submodule {
-            options = {
-              userSettings = lib.mkOption {
-                type = with lib.types; attrsOf anything;
-                default = { };
-                description = "Aliased of user configuration";
-              };
-              homeSettings = lib.mkOption {
-                type = with lib.types; attrsOf anything;
-                default = { };
-                description = "Aliased of home configuration";
-              };
-            };
-          });
+      users = lib.${namespace}.makeAttrsOption {
+        ofType = lib.types.submodule {
+          options = {
+            userSettings = lib.${namespace}.makeAttrsOption { };
+            homeSettings = lib.${namespace}.makeAttrsOption { };
+          };
+        };
         default = { };
-        description = "User with home-manager settings";
       };
     };
   };
@@ -47,6 +36,7 @@
       };
       home-manager = {
         useGlobalPkgs = true;
+        useUserPackages = true;
         backupFileExtension = "backup";
         extraSpecialArgs = { inherit namespace; };
         users = homeUsers;

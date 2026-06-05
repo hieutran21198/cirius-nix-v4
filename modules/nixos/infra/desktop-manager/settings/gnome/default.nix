@@ -2,6 +2,7 @@
   config,
   namespace,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -9,6 +10,7 @@ let
 in
 {
   options.${namespace}.infra.desktop-manager.settings.${engine} = {
+
   };
   config =
     let
@@ -16,7 +18,21 @@ in
       gnomeEnabled = dmOpts.enable && dmOpts.engine == engine;
     in
     lib.mkIf gnomeEnabled {
-      services.desktopManager.${engine}.enable = true;
-      services.displayManager.gdm.enable = true;
+      environment = {
+        systemPackages = with pkgs; [
+          desktop-file-utils
+          dconf-editor
+        ];
+      };
+      services = {
+        desktopManager.${engine}.enable = true;
+        displayManager.gdm.enable = true;
+        udev.packages = with pkgs; [ gnome-settings-daemon ];
+        gnome = {
+          core-apps.enable = true;
+          games.enable = false;
+          core-developer-tools.enable = false;
+        };
+      };
     };
 }

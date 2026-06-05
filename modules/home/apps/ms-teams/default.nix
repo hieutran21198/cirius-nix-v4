@@ -8,6 +8,7 @@
 {
   options.${namespace}.apps.ms-teams = {
     enable = lib.mkEnableOption "Enable microsoft teams for linux (Unofficial)";
+    markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
   };
   config =
     let
@@ -17,5 +18,10 @@
       home.packages = with pkgs; [
         teams-for-linux
       ];
+      ${namespace} = {
+        infra.desktop-manager = {
+          gnome.setFavoriteApps = [ "teams-for-linux.desktop" ];
+        };
+      };
     };
 }

@@ -8,6 +8,7 @@
 {
   options.${namespace}.apps.only-office = {
     enable = lib.mkEnableOption "Enable only office";
+    markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
   };
   config =
     let
@@ -17,5 +18,12 @@
       home.packages = with pkgs; [
         onlyoffice-desktopeditors
       ];
+      ${namespace} = {
+        infra.desktop-manager = {
+          gnome.setFavoriteApps = [
+            "onlyoffice-desktopeditors.desktop"
+          ];
+        };
+      };
     };
 }

@@ -54,6 +54,13 @@ in
   ${namespace} = {
     infra = {
       hostName = "mht-home-pc";
+      nvidia.enable = true;
+      virtualisation.enable = true;
+      input-method = {
+        enable = true;
+        enableLotus = true;
+        users = [ "cirius" ];
+      };
       shell = {
         fish = {
           enable = true;

@@ -6,19 +6,20 @@
   ...
 }:
 {
-  options.${namespace}.apps.gparted = {
-    enable = lib.mkEnableOption "Enable gparted";
+  options.${namespace}.apps.bruno = {
+    enable = lib.mkEnableOption "Enable bruno";
     markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
   };
+
   config =
     let
-      opts = config.${namespace}.apps.gparted;
+      opts = config.${namespace}.apps.bruno;
     in
     lib.mkIf opts.enable {
-      home.packages = with pkgs; [ gparted ];
+      home.packages = with pkgs; [ bruno ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "gparted.desktop" ];
+          gnome.setFavoriteApps = [ "bruno.desktop" ];
         };
       };
     };

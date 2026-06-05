@@ -1,4 +1,5 @@
 {
+  config,
   osConfig ? { },
   namespace,
   lib,
@@ -6,21 +7,37 @@
 }:
 {
   options.${namespace}.infra.desktop-manager.gnome = {
-    enabled = lib.mkOption {
-      type = lib.types.bool;
+    enabled = lib.${namespace}.makeBoolOption {
       readOnly = true;
-      description = "This is the flag that depended on nixos configuration";
     };
-    profile = lib.mkOption {
-      type = with lib.types; (enum [ "default" ]);
+    profile = lib.${namespace}.makeEnumOption {
+      acceptedList = [ "default" ];
       default = "default";
-      description = "Profile to be setted";
+    };
+    setFavoriteApps = lib.${namespace}.makeListOption {
+      ofType = lib.types.str;
+      default = [ ];
     };
   };
 
-  config = {
-    ${namespace}.infra.desktop-manager.gnome = {
-      enabled = lib.mkForce (osConfig.${namespace}.infra.desktop-manager.engine == "gnome");
+  config =
+    let
+      inherit (config.${namespace}.infra.desktop-manager) gnome;
+    in
+    {
+      ${namespace}.infra.desktop-manager.gnome = {
+        enabled = lib.mkForce (osConfig.${namespace}.infra.desktop-manager.engine == "gnome");
+      };
+      dconf = {
+        enable = true;
+        settings = {
+          "org/gnome/shell" = {
+            favorite-apps = gnome.setFavoriteApps;
+          };
+        };
+      };
+      xdg = {
+        enable = true;
+      };
     };
-  };
 }

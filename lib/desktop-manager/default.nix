@@ -1,4 +1,4 @@
-_:
+{ lib, ... }:
 let
   supportedDesktopManagers = {
     gnome = "gnome";
@@ -6,4 +6,10 @@ let
 in
 {
   inherit supportedDesktopManagers;
+
+  mkDconfTree =
+    base: tree:
+    lib.mapAttrs' (
+      name: value: lib.nameValuePair (if name == "/" then base else "${base}/${name}") value
+    ) tree;
 }

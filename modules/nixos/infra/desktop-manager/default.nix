@@ -8,14 +8,11 @@ let
 in
 {
   options = {
-    ${namespace}.infra.desktop-manager =
-      let
-        supportedDesktopManagersType = lib.types.enum (with supportedDesktopManagers; [ gnome ]);
-      in
-      {
-        engine = lib.mkOption {
-          type = supportedDesktopManagersType;
-        };
+    ${namespace}.infra.desktop-manager = {
+      engine = lib.${namespace}.makeEnumOption {
+        acceptedList = with supportedDesktopManagers; [ gnome ];
+        default = "gnome";
       };
+    };
   };
 }

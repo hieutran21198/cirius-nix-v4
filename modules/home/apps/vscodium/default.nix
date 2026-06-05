@@ -8,26 +8,21 @@
 {
   options.${namespace}.apps.vscodium = {
     enable = lib.mkEnableOption "Enable vscodium editor";
-    extensions = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (submodule {
-          options = {
-            package = lib.mkOption { type = with lib.types; package; };
-            settings = lib.mkOption {
-              type = with lib.types; attrsOf anything;
-              default = { };
-            };
-          };
-        });
+    markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
+    extensions = lib.${namespace}.makeAttrsOption {
+      ofType = lib.types.submodule {
+        options = {
+          package = lib.${namespace}.makePackageOption { };
+          settings = lib.${namespace}.makeAttrsOption { default = { }; };
+        };
+      };
       default = { };
-      description = "Extensions";
     };
+    userSettings = lib.${namespace}.makeAttrsOption { };
   };
   config =
     let
       opts = config.${namespace}.apps.vscodium;
-
       extensionsPackages =
         (with pkgs.nix-vscode-extensions.vscode-marketplace; [
           arrterian.nix-env-selector
@@ -41,16 +36,28 @@
     in
     lib.mkIf opts.enable {
       home.packages = with pkgs; [ nixfmt ];
+      ${namespace} = {
+        infra.desktop-manager = {
+          gnome.setFavoriteApps = [
+            "codium.desktop"
+          ];
+        };
+      };
       programs.vscodium = {
         enable = true;
         profiles.default = {
           enableUpdateCheck = false;
           extensions = extensionsPackages;
-          userSettings = extensionsSettings // {
-            "explorer.confirmDelete" = false;
-            "explorer.confirmDragAndDrop" = false;
-            "nix.formatterPath" = "nixfmt";
-            "editor.formatOnSave" = true;
+          userSettings =
+            extensionsSettings
+            // {
+              "explorer.confirmDelete" = false;
+              "explorer.confirmDragAndDrop" = false;
+              "editor.formatOnSave" = true;
+              "nix.formatterPath" = "nixfmt";
+            }
+            // opts.userSettings;
+          languageSnippets = {
           };
         };
       };

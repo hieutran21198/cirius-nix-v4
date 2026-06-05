@@ -1,4 +1,8 @@
-{ namespace, config, ... }:
+{
+  namespace,
+  config,
+  ...
+}:
 {
   ${namespace} = {
     infra = {
@@ -18,22 +22,55 @@
       desktop-manager = {
         gnome = {
           profile = "default";
+          profile-default = {
+            blurEffect = {
+              enable = true;
+            };
+            extensions = [ ];
+          };
         };
       };
     };
 
     apps = {
+      pods = {
+        enable = true;
+        markAsFavorite = true;
+      };
+      bruno = {
+        enable = true;
+        markAsFavorite = true;
+      };
+      obsidian = {
+        enable = true;
+        markAsFavorite = true;
+      };
+      ghostty = {
+        enable = true;
+        markAsFavorite = true;
+      };
       aws-cli.enable = true;
-      vscodium.enable = true;
+      vscodium = {
+        enable = true;
+        markAsFavorite = true;
+      };
       direnv.enable = true;
       devenv.enable = true;
-      datagrip.enable = true;
+      datagrip = {
+        enable = true;
+        markAsFavorite = true;
+      };
       gparted.enable = true;
       proton-pass = {
         enable = true;
+        markAsFavorite = true;
       };
+      go-toolchain.enable = true;
       ms-teams.enable = true;
-      only-office.enable = true;
+      only-office = {
+        enable = true;
+        markAsFavorite = true;
+      };
       ai = {
         claude.enable = true;
         codex.enable = true;
@@ -41,7 +78,9 @@
       };
       librewolf = {
         enable = true;
+        markAsFavorite = true;
         persistFingerprint = true;
+        enableSidebarTabs = true;
         containers = {
           uit = {
             id = 1;

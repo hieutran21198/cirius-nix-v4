@@ -22,6 +22,8 @@ Use standard Nix style: two-space indentation, multiline attribute sets for nest
 
 Expose repository-specific options under the flake namespace (`${namespace}`). Keep host-specific values, hardware details, users, and locale choices in `systems/`; keep reusable behavior in `modules/`.
 
+Prefer the repository option helpers from `lib/core/default.nix` when declaring namespaced module options. Use `lib.${namespace}.makeBoolOption`, `makeStrOption`, `makeIntOption`, `makeFloatOption`, `makePackageOption`, `makeEnumOption`, `makeListOption`, and `makeAttrsOption` instead of hand-written `lib.mkOption` for primitive, package, enum, list, and attrs options. Pass helper inputs such as `default`, `description`, `readOnly`, `nullable`, `acceptedList`, and `ofType` as needed; use raw `lib.mkOption` only when the helper surface does not fit.
+
 ## Testing Guidelines
 
 There is no separate test suite yet. Treat Nix evaluation and builds as required checks. Run `nix flake check` after module edits and `sudo nixos-rebuild build --flake .#mht-home-pc` before changes affecting boot, display manager, users, shells, or hardware.

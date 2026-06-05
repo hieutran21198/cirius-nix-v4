@@ -7,10 +7,8 @@
 {
   options = {
     ${namespace}.infra = {
-      hostName = lib.mkOption {
-        type = with lib.types; str;
+      hostName = lib.${namespace}.makeStrOption {
         default = "nixos";
-        description = "Machine hostname";
       };
       networking = {
         enable = lib.mkEnableOption "Enable networking feature";

@@ -1,5 +1,6 @@
 {
-  osConfig,
+  osConfig ? { },
+  config,
   namespace,
   lib,
   ...
@@ -11,9 +12,15 @@
       [ "programs" "fish" "shellAbbrs" ]
     )
   ];
-  config = {
+  options.${namespace}.infra.shell.fish = {
+    enabled = lib.${namespace}.makeBoolOption {
+      readOnly = true;
+      default = osConfig.${namespace}.infra.shell.fish.enable;
+    };
+  };
+  config = lib.mkIf config.${namespace}.infra.shell.fish.enabled {
     programs.fish = {
-      enable = lib.mkForce osConfig.${namespace}.infra.shell.fish.enable;
+      enable = true;
     };
   };
 }
