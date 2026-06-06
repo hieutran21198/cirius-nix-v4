@@ -1,11 +1,25 @@
 {
   namespace,
   config,
+  pkgs,
   ...
 }:
 {
   ${namespace} = {
     infra = {
+      fonts = {
+        monospace = {
+          name = "MonaspiceNe Nerd Font Mono";
+          package = pkgs.nerd-fonts.monaspace;
+        };
+        emoji = {
+          package = pkgs.noto-fonts-color-emoji;
+          name = "Noto Color Emoji";
+        };
+        sizes = {
+          terminal = 10;
+        };
+      };
       shell = {
         fish.shellAbbrs = {
           rbnix = "sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4";
@@ -14,9 +28,9 @@
           gps = "git push origin";
           gaa = "git add .";
           gcm = "git commit -m";
-          nixgens = "nix-env --list-generations";
-          delgens = "nix-env --delete-generations old";
-          cleanstore = "nix-store --gc";
+          nixgens = "sudo nix-env --profile /nix/var/nix/profiles/system --list-generations";
+          delgens = "sudo nix-env --profile /nix/var/nix/profiles/system --delete-generations old";
+          cleanstore = "sudo nix-store --gc";
         };
       };
       desktop-manager = {
@@ -65,6 +79,7 @@
         enable = true;
         markAsFavorite = true;
       };
+      nvim.enable = true;
       go-toolchain.enable = true;
       ms-teams.enable = true;
       only-office = {

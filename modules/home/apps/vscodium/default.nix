@@ -55,6 +55,11 @@
               "explorer.confirmDragAndDrop" = false;
               "editor.formatOnSave" = true;
               "nix.formatterPath" = "nixfmt";
+              "editor.fontFamily" =
+                let
+                  stylixFont = config.stylix.fonts.monospace.name;
+                in
+                "${if stylixFont != "" then "'${stylixFont}'," else ""} 'Droid Sans Mono', monospace";
             }
             // opts.userSettings;
           languageSnippets = {

@@ -52,11 +52,39 @@
         }
         {
           package = pkgs.gnomeExtensions.runcat;
-          settings = { };
+          settings = {
+            "/" = {
+              custom-system-monitor-enabled = false;
+              displaying-items = "character-and-percentage";
+              idle-threshold = 10;
+              invert-speed = false;
+            };
+          };
         }
         {
           package = pkgs.gnomeExtensions.caffeine;
-          settings = { };
+          settings = {
+            "/" = {
+              cli-toggle = false;
+              duration-timer = 2;
+              duration-timer-list = [
+                900
+                1800
+                3600
+              ];
+              enable-fullscreen = true;
+              enable-mpris = true;
+              indicator-position-max = 2;
+              nightlight-control = "never";
+              restore-state = false;
+              screen-blank = "never";
+              show-indicator = "always";
+              show-notifications = true;
+              show-timer = true;
+              show-toggle = true;
+              trigger-apps-mode = "on-running";
+            };
+          };
         }
         {
           package = pkgs.gnomeExtensions.kimpanel;
@@ -121,7 +149,20 @@
       );
     in
     lib.mkIf (gnome.enabled && gnome.profile == "default") {
-      home.packages = (with pkgs; [ morewaita-icon-theme ]) ++ (map (x: x.package) extensions);
+      home.packages =
+        (with pkgs; [
+          morewaita-icon-theme
+        ])
+        ++ (map (x: x.package) extensions);
+
+      programs.nixvim = {
+        extraConfigLuaPost = ''
+          vim.cmd [[ colorscheme base16-chinoiserie-midnight ]]
+        '';
+        colorschemes.base16 = {
+          enable = true;
+        };
+      };
 
       dconf = {
         settings = {
