@@ -18,5 +18,13 @@
       virtualisation.podman = {
         enable = true;
       };
+
+      ${namespace}.infra = {
+        persistenceDirs = [
+          "/var/lib/docker"
+          "/var/lib/containers"
+          "/var/lib/libvirt"
+        ];
+      };
     };
 }

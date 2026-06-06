@@ -28,6 +28,10 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # applications
     firefox-addons = {
@@ -90,6 +94,7 @@
               sops-nix.nixosModules.sops
               stylix.nixosModules.stylix
               fcitx5-lotus.nixosModules.fcitx5-lotus
+              impermanence.nixosModules.impermanence
             ])
             ++ crossSystemModules;
 

@@ -33,6 +33,17 @@ in
           games.enable = false;
           core-developer-tools.enable = false;
         };
+        # Enable touchpad support (enabled default in most desktopManager).
+        # services.xserver.libinput.enable = true;
+        # Enable the X11 windowing system.
+        xserver = {
+          enable = true;
+          # Configure keymap in X11
+          xkb = {
+            layout = "us";
+            variant = "";
+          };
+        };
       };
     };
 }

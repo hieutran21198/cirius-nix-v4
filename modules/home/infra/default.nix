@@ -12,7 +12,10 @@
     theme = { };
   };
   config = {
-    home.packages = with pkgs; [ base16-schemes ];
+    home.packages = with pkgs; [
+      base16-schemes
+      tree
+    ];
     stylix =
       let
         adwaitaBase16Scheme = {

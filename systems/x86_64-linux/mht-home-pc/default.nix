@@ -25,12 +25,6 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://proxy.example:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   nix = {
     settings = {
       trusted-users = [
@@ -53,9 +47,18 @@ in
   # namespace config.
   ${namespace} = {
     infra = {
-      hostName = "mht-home-pc";
       nvidia.enable = true;
       virtualisation.enable = true;
+      networking = {
+        enable = true;
+        hostName = "mht-home-pc";
+        # Open ports in the firewall.
+        firewall = {
+          enable = true;
+          # allowedTCPPorts = [ ... ];
+          # allowedUDPPorts = [ ... ];
+        };
+      };
       input-method = {
         enable = true;
         enableLotus = true;
@@ -77,10 +80,15 @@ in
             inherit (shell) fish;
           in
           {
+            # Define a user account. Don't forget to set a password with ‘passwd’.
             cirius = {
               userSettings = {
                 isNormalUser = true;
-                extraGroups = [ groups.mht-home-pc-admins.name ];
+                extraGroups = [
+                  groups.mht-home-pc-admins.name
+                  "networkmanager"
+                  "wheel"
+                ];
                 shell = if fish.enable then fish.package else pkgs.bash;
               };
               homeSettings = {
@@ -91,9 +99,6 @@ in
             };
           };
       };
-      networking = {
-        enable = true;
-      };
       desktop-manager = {
         enable = true;
         engine = supportedDesktopManagers.gnome;
@@ -103,6 +108,29 @@ in
       };
     };
   };
+
+  environment.etc.crypttab.text = ''
+    secure UUID=e211ebab-1197-40df-8f2d-c80fd12fe942 none luks,nofail
+  '';
+
+  fileSystems = {
+    "/home/cirius/Workspaces" = {
+      device = "/dev/mapper/secure";
+      fsType = "btrfs";
+      options = [
+        "subvol=@cirius-workspaces"
+        "compress=zstd"
+        "noatime"
+        "nofail"
+        "x-systemd.requires=systemd-cryptsetup@secure.service"
+        "x-systemd.after=systemd-cryptsetup@secure.service"
+      ];
+    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /home/cirius/Workspaces 0700 cirius users - -"
+  ];
 
   # Set your time zone.
   time.timeZone = "Asia/Ho_Chi_Minh";
@@ -122,53 +150,7 @@ in
     LC_TIME = "vi_VN";
   };
 
-  services = {
-    # Enable the X11 windowing system.
-    xserver = {
-      enable = true;
-
-      # Configure keymap in X11
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-
-    # Enable CUPS to print documents.
-    printing.enable = true;
-
-    # Enable sound with pipewire.
-    pulseaudio.enable = false;
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
-
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
-    };
-  };
   security.rtkit.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.cirius = {
-    isNormalUser = true;
-    description = "cirius";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    packages = with pkgs; [
-      #  thunderbird
-    ];
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -192,12 +174,6 @@ in
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   system = {
     inherit stateVersion;

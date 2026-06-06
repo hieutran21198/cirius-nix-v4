@@ -26,6 +26,9 @@
       kernelModules = [ ];
       luks.devices."luks-65b3649e-637e-47ea-98d6-9b365f7ba3ae".device =
         "/dev/disk/by-uuid/65b3649e-637e-47ea-98d6-9b365f7ba3ae";
+      supportedFilesystems = {
+        btrfs = true;
+      };
     };
     kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
@@ -55,6 +58,7 @@
     "/persist" = {
       device = "/dev/mapper/luks-65b3649e-637e-47ea-98d6-9b365f7ba3ae";
       fsType = "btrfs";
+      neededForBoot = true;
       options = [
         "subvol=@persist"
         "compress=zstd"
@@ -65,6 +69,7 @@
     "/nix" = {
       device = "/dev/mapper/luks-65b3649e-637e-47ea-98d6-9b365f7ba3ae";
       fsType = "btrfs";
+      neededForBoot = true;
       options = [
         "subvol=@nix"
         "compress=zstd"

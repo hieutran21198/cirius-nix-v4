@@ -51,6 +51,9 @@
         enable = true;
         markAsFavorite = true;
       };
+      zoxide = {
+        enable = true;
+      };
       bruno = {
         enable = true;
         markAsFavorite = true;
