@@ -1,0 +1,12 @@
+keys:
+  - &mht-home-pc age1uq3sazn8wsdedjhw367cns4tf80kr63usdgu3szpfv2s8ntqdesq2mpa4q
+  - &cirius_mht-home-pc age1p495yz2np3kxa03qs2370nsl4jsv22fggs3r3wq7zv6nqn4n29xqg0znr9
+creation_rules:
+  - path_regex: secrets/mht-home-pc/.+[^/]\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *mht-home-pc
+  - path_regex: secrets/cirius\@mht-home-pc/.+[^/]\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+         - *cirius_mht-home-pc

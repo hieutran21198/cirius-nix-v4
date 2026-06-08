@@ -20,9 +20,41 @@
   config =
     let
       opts = config.${namespace}.apps.nvim;
+      inherit (lib.${namespace}.nvim) mkKeymap;
     in
     lib.mkIf opts.enable {
       programs.nixvim = {
+        keymaps = [
+          (mkKeymap "K" "<cmd>lua vim.lsp.buf.hover()<cr>" "󰋖 Hover")
+        ]
+        ++ (lib.optionals opts.enableLeaderOrientedKeymaps [
+          (mkKeymap "<leader>l" "<nop>" "󰒓 LSP")
+
+          # LSP navigation via Snacks picker
+          (mkKeymap "<leader>ld" "<cmd>lua Snacks.picker.lsp_definitions()<cr>" "󰊕 LSP Definition")
+          (mkKeymap "<leader>lD" "<cmd>lua Snacks.picker.lsp_declarations()<cr>" "󰳽 LSP Declaration")
+          (mkKeymap "<leader>lr" "<cmd>lua Snacks.picker.lsp_references()<cr>" "󰈇 LSP References")
+          (mkKeymap "<leader>li" "<cmd>lua Snacks.picker.lsp_implementations()<cr>" "󰡱 LSP Implementation")
+          (mkKeymap "<leader>lt" "<cmd>lua Snacks.picker.lsp_type_definitions()<cr>" "󰜁 LSP Type Definition")
+
+          # Symbols
+          (mkKeymap "<leader>ls" "<cmd>lua Snacks.picker.lsp_symbols()<cr>" "󰓹 Document Symbols")
+          (mkKeymap "<leader>lS" "<cmd>lua Snacks.picker.lsp_workspace_symbols()<cr>" "󰊄 Workspace Symbols")
+
+          # Calls
+          (mkKeymap "<leader>lc" "<nop>" "󰃷 Calls")
+          (mkKeymap "<leader>lci" "<cmd>lua Snacks.picker.lsp_incoming_calls()<cr>" "󰃷 Incoming Calls")
+          (mkKeymap "<leader>lco" "<cmd>lua Snacks.picker.lsp_outgoing_calls()<cr>" "󰃶 Outgoing Calls")
+
+          # Diagnostics via Snacks
+          (mkKeymap "<leader>lx" "<cmd>lua Snacks.picker.diagnostics_buffer()<cr>" "󰅚 Buffer Diagnostics")
+          (mkKeymap "<leader>lX" "<cmd>lua Snacks.picker.diagnostics()<cr>" "󰒡 Workspace Diagnostics")
+
+          # Native LSP actions
+          (mkKeymap "<leader>la" "<cmd>lua vim.lsp.buf.code_action()<cr>" "󰌵 Code Action")
+          (mkKeymap "<leader>ln" "<cmd>lua vim.lsp.buf.rename()<cr>" "󰑕 Rename Symbol")
+          (mkKeymap "<leader>lh" "<cmd>lua vim.lsp.buf.signature_help()<cr>" "󰘥 Signature Help")
+        ]);
         lsp = {
           enable = true;
           servers = {

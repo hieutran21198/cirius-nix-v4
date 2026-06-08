@@ -33,6 +33,7 @@
       extensionsSettings = lib.foldl' lib.recursiveUpdate { } (
         lib.mapAttrsToList (_: value: value.settings) opts.extensions
       );
+
     in
     lib.mkIf opts.enable {
       home.packages = with pkgs; [ nixfmt ];

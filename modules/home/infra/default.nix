@@ -7,15 +7,29 @@
 {
   imports = [
     (lib.mkAliasOptionModule [ namespace "infra" "theme" "base16Scheme" ] [ "stylix" "base16Scheme" ])
+    (lib.mkAliasOptionModule
+      [ namespace "infra" "persistenceDirs" ]
+      [ "home" "persistence" "persist" "directories" ]
+    )
+    (lib.mkAliasOptionModule
+      [ namespace "infra" "persistenceFiles" ]
+      [ "home" "persistence" "persist" "files" ]
+    )
   ];
   options.${namespace}.infra = {
     theme = { };
   };
   config = {
-    home.packages = with pkgs; [
-      base16-schemes
-      tree
-    ];
+    home = {
+      persistence."/persist" = {
+        directories = [ ];
+        files = [ ];
+      };
+      packages = with pkgs; [
+        base16-schemes
+        tree
+      ];
+    };
     stylix =
       let
         adwaitaBase16Scheme = {

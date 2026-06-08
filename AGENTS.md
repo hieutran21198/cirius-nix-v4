@@ -1,39 +1,67 @@
-# Repository Guidelines
+# Agent Guide
 
-## Project Structure & Module Organization
+This file is the context-light table of contents for repository work. Keep it short.
+The system of record lives under `docs/`; open only the docs relevant to the task.
 
-This repository is a Snowfall-based Nix flake for personal NixOS and Home Manager configuration. `flake.nix` is the main entry point for inputs, modules, overlays, and host outputs. Host NixOS configurations live in `systems/<system>/<host>/`, for example `systems/x86_64-linux/mht-home-pc/default.nix`. User Home Manager configurations live in `homes/<system>/<user@host>/`.
+## Start Here
 
-Reusable modules are grouped by target: `modules/nixos/`, `modules/home/`, and `modules/cross-system/`. Custom helper code belongs in `lib/`; package overrides or generated package sets belong in `overlays/`.
+- Repo map and ownership boundaries: `docs/repository/structure.md`
+- Build, evaluation, and local workflow: `docs/repository/development.md`
+- Nix style and module option conventions: `docs/repository/nix-style.md`
+- Required validation: `docs/repository/testing.md`
+- Commit and PR expectations: `docs/repository/changes.md`
+- Secrets and secure-store notes: `docs/secure/README.md`
+- Secure-store setup procedure: `docs/secure/secure-store.md`
 
-## Build, Test, and Development Commands
+## Quick Context
 
-- `nix flake check`: evaluate flake outputs and catch broken modules.
-- `nix flake show`: inspect available systems, homes, packages, and other generated outputs.
-- `sudo nixos-rebuild build --flake .#mht-home-pc`: build the current host without switching to it.
-- `sudo nixos-rebuild switch --flake .#mht-home-pc`: apply the host configuration locally.
-- `devenv shell`: enter the development environment when `devenv.nix` grows project tooling.
+This is a Snowfall-based Nix flake for personal NixOS and Home Manager
+configuration. `flake.nix` wires inputs, modules, overlays, and generated host
+outputs.
 
-Prefer `build` before `switch` for core NixOS, hardware, boot, or desktop-manager changes.
+Use these broad ownership rules:
 
-## Coding Style & Naming Conventions
+- Host NixOS configuration: `systems/<system>/<host>/`
+- User Home Manager configuration: `homes/<system>/<user@host>/`
+- Reusable NixOS modules: `modules/nixos/`
+- Reusable Home Manager modules: `modules/home/`
+- Cross-system modules: `modules/cross-system/`
+- Repository helper library code: `lib/`
+- Package overlays and generated package sets: `overlays/`
+- Long-lived knowledge and procedures: `docs/`
 
-Use standard Nix style: two-space indentation, multiline attribute sets for nested configuration, and concise `let` bindings for reused values. Name modules by capability and keep paths predictable, such as `modules/home/apps/<app>/default.nix` or `modules/nixos/infra/<feature>/default.nix`.
+## Before Editing
 
-Expose repository-specific options under the flake namespace (`${namespace}`). Keep host-specific values, hardware details, users, and locale choices in `systems/`; keep reusable behavior in `modules/`.
+- Read the relevant doc from the table above before changing code.
+- Keep host-specific values, hardware details, users, and locale choices in
+  `systems/`.
+- Keep reusable behavior in `modules/`.
+- Preserve the existing Snowfall module convention: module directories expose
+  `default.nix`.
+- Do not commit secrets, private keys, or unencrypted credentials.
 
-Prefer the repository option helpers from `lib/core/default.nix` when declaring namespaced module options. Use `lib.${namespace}.makeBoolOption`, `makeStrOption`, `makeIntOption`, `makeFloatOption`, `makePackageOption`, `makeEnumOption`, `makeListOption`, and `makeAttrsOption` instead of hand-written `lib.mkOption` for primitive, package, enum, list, and attrs options. Pass helper inputs such as `default`, `description`, `readOnly`, `nullable`, `acceptedList`, and `ofType` as needed; use raw `lib.mkOption` only when the helper surface does not fit.
+## Common Commands
 
-## Testing Guidelines
+- `nix flake check`
+- `nix flake show`
+- `sudo nixos-rebuild build --flake .#mht-home-pc`
+- `sudo nixos-rebuild switch --flake .#mht-home-pc`
+- `devenv shell`
 
-There is no separate test suite yet. Treat Nix evaluation and builds as required checks. Run `nix flake check` after module edits and `sudo nixos-rebuild build --flake .#mht-home-pc` before changes affecting boot, display manager, users, shells, or hardware.
+Prefer `build` before `switch` for core NixOS, hardware, boot, display-manager,
+desktop-manager, user, shell, or other high-impact system changes.
 
-## Commit & Pull Request Guidelines
+## Non-Negotiables
 
-Use Conventional Commits checked by Commitizen. Keep subjects short, imperative, and meaningful, such as `feat: add vscodium home module` or `chore: update desktop settings`. Prefer brief bodies only when they clarify intent or validation. Keep commits focused by host, module, or overlay.
+- Use standard Nix formatting: two-space indentation and readable multiline
+  attribute sets.
+- Put repository-specific options under the flake namespace (`${namespace}`).
+- Prefer option helpers from `lib/core/default.nix` for primitive, package,
+  enum, list, and attrs options.
+- Run `nix flake check` after module edits when feasible.
+- Review `flake.lock` changes carefully.
 
-For pull requests, include intent, affected paths, commands run, and manual validation. Mention whether the change was built only or switched locally. Include screenshots only for visible desktop or application changes.
+## Maintaining This Map
 
-## Security & Configuration Tips
-
-Do not commit secrets, private keys, or unencrypted credentials. Use `sops-nix` for secrets and keep hardware-specific details in the relevant host directory. Review `flake.lock` changes carefully because input updates can affect the whole system.
+When guidance grows beyond a few lines, move it into `docs/` and link it here.
+When docs move, update this file in the same change.

@@ -24,8 +24,11 @@
         "sd_mod"
       ];
       kernelModules = [ ];
-      luks.devices."luks-65b3649e-637e-47ea-98d6-9b365f7ba3ae".device =
-        "/dev/disk/by-uuid/65b3649e-637e-47ea-98d6-9b365f7ba3ae";
+      luks.devices = {
+        "luks-65b3649e-637e-47ea-98d6-9b365f7ba3ae" = {
+          device = "/dev/disk/by-uuid/65b3649e-637e-47ea-98d6-9b365f7ba3ae";
+        };
+      };
       supportedFilesystems = {
         btrfs = true;
       };

@@ -14,14 +14,29 @@
     in
     lib.mkIf opts.enable {
       programs.nixvim = {
+        extraConfigLuaPost = ''
+          require("luasnip.loaders.from_vscode").lazy_load({
+            paths = {
+              "${config.${namespace}.apps.snippets.built.nvimSnippetDir}",
+            },
+          })
+        '';
         opts = {
           autocomplete = false;
           completeopt = "popup,nearest";
         };
         plugins = {
+          luasnip.enable = true;
           blink-cmp = {
             enable = true;
             settings = {
+              appearance = {
+                use_nvim_cmp_as_default = true;
+                nerd_font_variant = "normal";
+              };
+              snippets = {
+                preset = "luasnip";
+              };
               sources.default = [
                 "lsp"
                 "path"
@@ -46,7 +61,6 @@
                 ];
               };
               fuzzy.implementation = "prefer_rust_with_warning";
-              appearance.use_nvim_cmp_as_default = true;
               signature.enabled = true;
               completion = {
                 trigger.prefetch_on_insert = false;

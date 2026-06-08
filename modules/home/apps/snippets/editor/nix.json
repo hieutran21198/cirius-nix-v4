@@ -1,0 +1,60 @@
+{
+	"Home programs": {
+		"prefix": [
+			"home-programs"
+		],
+		"description": "Create a Nix app module with enable option",
+		"body": [
+			"{",
+			"  config,",
+			"  namespace,",
+			"  pkgs,",
+			"  lib,",
+			"  ...",
+			"}:",
+			"{",
+			"  options.\\${namespace}.apps.${1:appName} = {",
+			"    enable = lib.mkEnableOption \"Enable ${1:appName}\";",
+			"  };",
+			"",
+			"  config =",
+			"    let",
+			"      opts = config.\\${namespace}.apps.${1:appName};",
+			"    in",
+			"    lib.mkIf opts.enable {",
+			"      programs.${1:appName} = {",
+			"        enable = true;",
+			"      };",
+			"    };",
+			"}"
+		]
+	},
+	"Home package": {
+		"prefix": [
+			"home-package"
+		],
+		"description": "Create a Nix app module with enable option",
+		"body": [
+			"{",
+			"  config,",
+			"  namespace,",
+			"  pkgs,",
+			"  lib,",
+			"  ...",
+			"}:",
+			"{",
+			"  options.\\${namespace}.apps.${1:appName} = {",
+			"    enable = lib.mkEnableOption \"Enable ${1:appName}\";",
+			"  };",
+			"",
+			"  config =",
+			"    let",
+			"      opts = config.\\${namespace}.apps.${1:appName};",
+			"    in",
+			"    lib.mkIf opts.enable {",
+			"      home.packages = with pkgs; [ ${1:appName} ];",
+			"    };",
+			"}"
+		]
+	}
+}

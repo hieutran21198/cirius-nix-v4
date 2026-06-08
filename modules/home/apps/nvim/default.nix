@@ -1,7 +1,6 @@
 {
   config,
   namespace,
-  pkgs,
   lib,
   ...
 }:
@@ -25,11 +24,11 @@
     enable = lib.mkEnableOption "Enable nvim";
     leaderKey = lib.${namespace}.makeStrOption { default = " "; };
     enableRecommendedOptions = lib.${namespace}.makeBoolOption { default = true; };
+    enableLeaderOrientedKeymaps = lib.${namespace}.makeBoolOption { default = true; };
   };
   config =
     let
       opts = config.${namespace}.apps.nvim;
-      inherit (lib.${namespace}.nvim) mkKeymap;
     in
     lib.mkIf opts.enable {
       programs.nixvim = {
@@ -43,50 +42,6 @@
         };
         viAlias = true;
         vimAlias = true;
-        plugins = {
-          web-devicons.enable = true;
-          which-key.enable = true;
-          treesitter = {
-            enable = true;
-            package = pkgs.vimPlugins.nvim-treesitter;
-            highlight.enable = true;
-            indent.enable = true;
-            folding.enable = false;
-          };
-          lualine = {
-            enable = true;
-            settings = {
-              options = {
-                globalstatus = true;
-                theme = "auto";
-                icons_enabled = true;
-              };
-            };
-          };
-        };
-        extraConfigLuaPre = ''
-          require('vim._core.ui2').enable()
-        '';
-        keymaps = [
-          (mkKeymap "<leader>q" "<cmd>xa<cr>" " 󰩈 Save all and close")
-          (mkKeymap "<esc>" "<cmd>nohlsearch<cr>" {
-            mode = [ "n" ];
-            options = {
-              silent = true;
-              nowait = true;
-              desc = "  Clear highlight";
-            };
-          })
-
-          (mkKeymap "<leader>w" "" " Window Management")
-          (mkKeymap "<leader>wh" "<cmd>wincmd h<cr>" "  Switch to left buffer")
-          (mkKeymap "<leader>wj" "<cmd>wincmd j<cr>" "  Switch to bottom buffer")
-          (mkKeymap "<leader>wk" "<cmd>wincmd k<cr>" "  Switch to top buffer")
-          (mkKeymap "<leader>wl" "<cmd>wincmd l<cr>" "  Switch to right buffer")
-
-          (mkKeymap "<leader>b" "" " Buffer Management")
-          (mkKeymap "<leader>bc" "<cmd>%bd|e#<cr>" "  Close buffer")
-        ];
         opts = lib.optionalAttrs opts.enableRecommendedOptions {
           clipboard = "unnamedplus";
           timeout = true;

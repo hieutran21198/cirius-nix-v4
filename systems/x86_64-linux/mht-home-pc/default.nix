@@ -47,6 +47,27 @@ in
   # namespace config.
   ${namespace} = {
     infra = {
+      ai = {
+        llama-cpp.enable = true;
+      };
+      security = {
+        # LUKS secure device.
+        secureStore = {
+          enable = true;
+          name = "secure-store";
+          device = "/dev/disk/by-uuid/a0b01d1b-4e4a-43b8-af99-888be9694e1d";
+          fsType = "btrfs";
+          mountOptions = [
+            "ro"
+            "nodev"
+            "nosuid"
+            "noexec"
+            "compress=zstd"
+            "noatime"
+          ];
+          hostAgeKey = "host/sops-age/key.txt";
+        };
+      };
       nvidia.enable = true;
       virtualisation.enable = true;
       networking = {
@@ -124,6 +145,64 @@ in
         "nofail"
         "x-systemd.requires=systemd-cryptsetup@secure.service"
         "x-systemd.after=systemd-cryptsetup@secure.service"
+      ];
+    };
+
+    "/mnt/main-data" = {
+      device = "/dev/disk/by-uuid/16D3A0ED3E0C06F5";
+      fsType = "ntfs3";
+      options = [
+        "rw"
+        "nofail"
+        "noatime"
+
+        "uid=1000"
+        "gid=100"
+        "umask=022"
+        "dmask=0022"
+        "fmask=0022"
+
+        "windows_names"
+      ];
+    };
+
+    "/home/cirius/Documents" = {
+      device = "/mnt/main-data/Documents";
+      fsType = "none";
+      options = [
+        "bind"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
+      ];
+    };
+
+    "/home/cirius/Music" = {
+      device = "/mnt/main-data/Music";
+      fsType = "none";
+      options = [
+        "bind"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
+      ];
+    };
+
+    "/home/cirius/Pictures" = {
+      device = "/mnt/main-data/Pictures";
+      fsType = "none";
+      options = [
+        "bind"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
+      ];
+    };
+
+    "/home/cirius/Videos" = {
+      device = "/mnt/main-data/Videos";
+      fsType = "none";
+      options = [
+        "bind"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
       ];
     };
   };

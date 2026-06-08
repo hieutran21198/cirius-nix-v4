@@ -5,8 +5,20 @@
   ...
 }:
 {
+  home.sessionVariables = {
+    EDITOR = "nvim";
+  };
   ${namespace} = {
     infra = {
+      ai = {
+        llama-cpp = {
+          qwenFIM = {
+            enable = true;
+            port = 8001;
+            model = "fim-qwen-3b-default";
+          };
+        };
+      };
       fonts = {
         monospace = {
           name = "MonaspiceNe Nerd Font Mono";
@@ -22,7 +34,9 @@
       };
       shell = {
         fish.shellAbbrs = {
-          rbnix = "sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4";
+          rbnix = ''
+            secure-nixos-switch ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-home-pc
+          '';
           gco = "git checkout";
           gpl = "git pull origin";
           gps = "git push origin";
@@ -82,6 +96,7 @@
         enable = true;
         markAsFavorite = true;
       };
+      fastfetch.enable = true;
       nvim.enable = true;
       go-toolchain.enable = true;
       ms-teams.enable = true;

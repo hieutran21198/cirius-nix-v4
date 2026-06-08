@@ -16,7 +16,10 @@
       firefoxExt = pkgs.firefox-extensions.proton-pass;
     in
     lib.mkIf apps.proton-pass.enable {
-      home.packages = with pkgs; [ proton-pass ];
+      home.packages = with pkgs; [
+        proton-pass
+        proton-pass-cli
+      ];
       ${namespace} = {
         infra.desktop-manager = {
           gnome.setFavoriteApps = [
@@ -56,6 +59,5 @@
           };
         };
       };
-
     };
 }
