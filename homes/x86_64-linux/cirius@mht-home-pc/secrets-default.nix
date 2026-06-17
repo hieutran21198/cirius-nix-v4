@@ -34,6 +34,14 @@ in
           key = "ai/deepseek/api-key";
           mode = "0400";
         };
+        "personal/ssh/config" = {
+          key = "ssh/config";
+          mode = "0400";
+        };
+        "personal/aws/config" = {
+          key = "aws/config";
+          mode = "0400";
+        };
       };
       templates = {
         "personal/opendesign/env-file" = {

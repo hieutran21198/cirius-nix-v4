@@ -7,6 +7,8 @@
 {
   imports = [
     ./secrets-default.nix
+    ./secrets-buuuk.nix
+    ./secrets-shared.nix
   ];
   home.sessionVariables = {
     EDITOR = "nvim";
