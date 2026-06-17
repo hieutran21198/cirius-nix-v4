@@ -15,7 +15,7 @@
     in
     lib.mkIf opts.enable {
       home.packages = with pkgs; [
-        claude-code
+        llm-agents.claude-code
         claude-monitor
       ];
       ${namespace} = {
