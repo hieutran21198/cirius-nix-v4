@@ -5,11 +5,17 @@
   ...
 }:
 {
+  imports = [
+    ./secrets-default.nix
+  ];
   home.sessionVariables = {
     EDITOR = "nvim";
   };
   ${namespace} = {
     infra = {
+      virtualisation = {
+        enable = true;
+      };
       ai = {
         llama-cpp = {
           qwenFIM = {
@@ -35,7 +41,7 @@
       shell = {
         fish.shellAbbrs = {
           rbnix = ''
-            secure-nixos-switch ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-home-pc
+            sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-home-pc
           '';
           gco = "git checkout";
           gpl = "git pull origin";
@@ -61,6 +67,9 @@
     };
 
     apps = {
+      podman = {
+        enable = true;
+      };
       pods = {
         enable = true;
         markAsFavorite = true;
@@ -104,10 +113,22 @@
         enable = true;
         markAsFavorite = true;
       };
+      herdr.enable = true;
       ai = {
+        pi.enable = true;
         claude.enable = true;
         codex.enable = true;
         opencode.enable = true;
+        opendesign.enable = true;
+        jules.enable = true;
+        antigravity.enable = true;
+      };
+      ai-assistant = {
+        aionui.enable = true;
+        hermes.enable = true;
+      };
+      ai-utilities = {
+        codegraph.enable = true;
       };
       librewolf = {
         enable = true;
