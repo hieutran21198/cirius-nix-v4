@@ -6,6 +6,9 @@
   lib,
   ...
 }:
+let
+  osVirtualisationEnabled = osConfig.${namespace}.infra.virtualisation.enable or false;
+in
 {
   options.${namespace}.apps.pods = {
     enable = lib.mkEnableOption "Enable pods";
@@ -19,7 +22,7 @@
     lib.mkIf opts.enable {
       assertions = [
         (lib.${namespace}.failWhen {
-          condition = osConfig.${namespace}.infra.virtualisation.enable == false;
+          condition = osVirtualisationEnabled == false;
           message = "Pods require os level virtualisation enabled";
         })
       ];
