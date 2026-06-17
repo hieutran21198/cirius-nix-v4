@@ -31,7 +31,9 @@
         plugins = {
           auto-session = {
             enable = true;
-            bypass_save_filetypes = [ "snacks_picker_list" ];
+            settings = {
+              bypass_save_filetypes = [ "snacks_picker_list" ];
+            };
           };
         };
       };

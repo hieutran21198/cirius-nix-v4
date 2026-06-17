@@ -12,6 +12,7 @@
   config = lib.mkIf config.${namespace}.apps.obsidian.enable {
     programs.obsidian = {
       enable = true;
+      cli.enable = true;
       defaultSettings = {
         communityPlugins = [ ];
       };

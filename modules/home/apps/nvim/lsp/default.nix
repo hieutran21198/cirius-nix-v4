@@ -56,7 +56,6 @@
           (mkKeymap "<leader>lh" "<cmd>lua vim.lsp.buf.signature_help()<cr>" "󰘥 Signature Help")
         ]);
         lsp = {
-          enable = true;
           servers = {
             nixd = {
               enable = true;

@@ -6,6 +6,26 @@
   ...
 }:
 {
+  imports = [
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "security"
+        "secrets"
+      ]
+      [ "sops" "secrets" ]
+    )
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "security"
+        "templates"
+      ]
+      [ "sops" "templates" ]
+    )
+  ];
   options.${namespace}.infra.security = {
     ageKey = lib.${namespace}.makeStrOption {
       default = "/run/secure-store/users/${config.snowfallorg.user.name}/sops-age/key.txt";

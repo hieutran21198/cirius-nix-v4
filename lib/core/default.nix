@@ -32,6 +32,7 @@ in
   makeIntOption = inputs: makePrimitiveOption lib.types.int inputs;
   makeFloatOption = inputs: makePrimitiveOption lib.types.float inputs;
   makeBoolOption = inputs: makePrimitiveOption lib.types.bool inputs;
+  makePathOption = inputs: makePrimitiveOption lib.types.path inputs;
   makeEnumOption =
     {
       acceptedList ? [ ],
