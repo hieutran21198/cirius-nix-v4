@@ -3,6 +3,7 @@
   pkgs,
   namespace,
   lib,
+  inputs,
   ...
 }:
 let
@@ -36,16 +37,23 @@ in
         "https://cache.nixos.org"
         "https://cache.nixos-cuda.org"
         "https://nix-community.cachix.org"
+        "https://codex-cli.cachix.org"
+        "https://cache.numtide.com"
       ];
       trusted-public-keys = [
         "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
+        "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       ];
     };
   };
 
   # namespace config.
   ${namespace} = {
+    services = {
+      gaming.enable = true;
+    };
     infra = {
       ai = {
         llama-cpp.enable = true;
@@ -70,16 +78,62 @@ in
       };
       nvidia.enable = true;
       virtualisation.enable = true;
-      networking = {
-        enable = true;
-        hostName = "mht-home-pc";
-        # Open ports in the firewall.
-        firewall = {
+      networking =
+        let
+          hostName = "mht-home-pc";
+          opencodeHost = "opencode.${hostName}";
+          opendesignHost = "opendesign.${hostName}";
+        in
+        {
           enable = true;
-          # allowedTCPPorts = [ ... ];
-          # allowedUDPPorts = [ ... ];
+          inherit hostName;
+          hosts = {
+            "127.0.0.1" = [
+              opencodeHost
+              opendesignHost
+            ];
+          };
+          # Open ports in the firewall.
+          firewall = {
+            enable = true;
+            # allowedTCPPorts = [ ... ];
+            # allowedUDPPorts = [ ... ];
+          };
+          virtualHosts = {
+            ${opencodeHost}.extraConfig = ''
+              tls internal
+              reverse_proxy 127.0.0.1:10200
+            '';
+            ${opendesignHost}.extraConfig =
+              let
+                openDesignWeb = inputs.open-design.packages.${pkgs.system}.web;
+              in
+              ''
+                tls internal
+                handle /api/* {
+                  reverse_proxy 127.0.0.1:10000 {
+                    flush_interval -1
+                    transport http {
+                      read_timeout 86400s
+                      write_timeout 86400s
+                    }
+                  }
+                }
+                handle /artifacts/* {
+                  reverse_proxy 127.0.0.1:10000
+                }
+                handle /frames/* {
+                  reverse_proxy 127.0.0.1:10000
+                }
+                handle {
+                  root * ${openDesignWeb}
+                  try_files {path} {path}/ /index.html
+                  file_server
+                  encode gzip
+                }
+              '';
+          };
         };
-      };
       input-method = {
         enable = true;
         enableLotus = true;
@@ -171,8 +225,11 @@ in
       fsType = "none";
       options = [
         "bind"
+        "rw"
         "nofail"
         "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
       ];
     };
 
@@ -181,8 +238,11 @@ in
       fsType = "none";
       options = [
         "bind"
+        "rw"
         "nofail"
         "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
       ];
     };
 
@@ -191,8 +251,11 @@ in
       fsType = "none";
       options = [
         "bind"
+        "rw"
         "nofail"
         "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
       ];
     };
 
@@ -201,10 +264,37 @@ in
       fsType = "none";
       options = [
         "bind"
+        "rw"
         "nofail"
         "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
       ];
     };
+  };
+
+  systemd.services.main-data-user-dirs = {
+    description = "Create user directories on main-data";
+    requires = [ "mnt-main\\x2ddata.mount" ];
+    after = [ "mnt-main\\x2ddata.mount" ];
+    before = [
+      "home-cirius-Documents.mount"
+      "home-cirius-Music.mount"
+      "home-cirius-Pictures.mount"
+      "home-cirius-Videos.mount"
+    ];
+    path = [ pkgs.coreutils ];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+    script = ''
+      set -euo pipefail
+
+      for dir in Documents Music Pictures Videos; do
+        install -d -m 0755 -o cirius -g users "/home/cirius/$dir"
+        mkdir -p "/mnt/main-data/$dir"
+      done
+    '';
   };
 
   systemd.tmpfiles.rules = [
