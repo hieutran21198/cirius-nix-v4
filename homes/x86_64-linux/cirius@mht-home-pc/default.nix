@@ -113,7 +113,7 @@
         enable = true;
         markAsFavorite = true;
       };
-      herdr.enable = true;
+      fzf.enable = true;
       ai = {
         pi.enable = true;
         claude.enable = true;
@@ -122,9 +122,12 @@
         opendesign.enable = true;
         jules.enable = true;
         antigravity.enable = true;
+        copilot.enable = true;
+        reasonix.enable = true;
       };
       ai-assistant = {
-        aionui.enable = true;
+        # TODO: missing aioncore
+        aionui.enable = false;
         hermes.enable = true;
       };
       ai-utilities = {

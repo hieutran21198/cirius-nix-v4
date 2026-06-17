@@ -24,7 +24,7 @@
         };
         enableFishIntegration = config.${namespace}.infra.shell.fish.enabled;
         settings = {
-          adjust-cell-height = "35%";
+          adjust-cell-height = "40%";
           copy-on-select = "clipboard";
           window-padding-x = 8;
           window-padding-y = 8;

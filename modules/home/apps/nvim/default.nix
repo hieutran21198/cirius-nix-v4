@@ -19,6 +19,7 @@
         "extraPackagesAfter"
       ]
     )
+    (lib.mkAliasOptionModule [ namespace "apps" "nvim" "extra-deps" ] [ "programs" "nixvim" "plugins" ])
   ];
   options.${namespace}.apps.nvim = {
     enable = lib.mkEnableOption "Enable nvim";

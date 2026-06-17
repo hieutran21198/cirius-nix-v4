@@ -2,11 +2,37 @@
   config,
   namespace,
   lib,
+  pkgs,
   ...
 }:
 {
-  options.${namespace}.apps.nvim.auto-completion = {
-  };
+  imports = [
+    (lib.mkAliasOptionModule
+      [ namespace "apps" "nvim" "auto-completion" "sources" ]
+      [
+        "programs"
+        "nixvim"
+        "plugins"
+        "blink-cmp"
+        "settings"
+        "sources"
+        "default"
+      ]
+    )
+    (lib.mkAliasOptionModule
+      [ namespace "apps" "nvim" "auto-completion" "providers" ]
+      [
+        "programs"
+        "nixvim"
+        "plugins"
+        "blink-cmp"
+        "settings"
+        "sources"
+        "providers"
+      ]
+    )
+  ];
+  options.${namespace}.apps.nvim.auto-completion = { };
 
   config =
     let
@@ -25,6 +51,8 @@
           autocomplete = false;
           completeopt = "popup,nearest";
         };
+        dependencies.ripgrep.enable = true;
+        extraPackages = with pkgs; [ ];
         plugins = {
           luasnip.enable = true;
           blink-cmp = {
@@ -37,12 +65,14 @@
               snippets = {
                 preset = "luasnip";
               };
-              sources.default = [
-                "lsp"
-                "path"
-                "snippets"
-                "buffer"
-              ];
+              sources = {
+                default = [
+                  "lsp"
+                  "path"
+                  "snippets"
+                  "buffer"
+                ];
+              };
               keymap = {
                 preset = "super-tab";
                 "<cr>" = [

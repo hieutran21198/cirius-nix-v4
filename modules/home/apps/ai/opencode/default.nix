@@ -12,10 +12,17 @@
       nullable = true;
       default = null;
     };
+    providerAPIKeys = lib.${namespace}.makeAttrsOption {
+      default = {
+      };
+    };
   };
   config =
     let
       opts = config.${namespace}.apps.ai.opencode;
+      providerWithAPIKeys = lib.mapAttrs (_: value: {
+        options.apiKey = "{file:${value}}";
+      }) opts.providerAPIKeys;
     in
     lib.mkIf opts.enable {
       programs.opencode = {
@@ -37,6 +44,7 @@
           };
           agent = {
           };
+          provider = { } // providerWithAPIKeys;
           compaction = {
             auto = true;
             prune = true;
