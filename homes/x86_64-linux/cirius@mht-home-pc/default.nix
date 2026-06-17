@@ -135,6 +135,8 @@
       ai-utilities = {
         codegraph.enable = true;
       };
+      chamber.enable = true;
+      aws-vault.enable = true;
       librewolf = {
         enable = true;
         markAsFavorite = true;
