@@ -51,6 +51,14 @@
     };
     open-design.url = "github:nexu-io/open-design";
     open-spec.url = "github:Fission-AI/OpenSpec";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # desktop
 
@@ -86,6 +94,10 @@
     core.mkFlake {
       channels-config = {
         allowUnfree = true;
+        permittedInsecurePackages = [
+          "librewolf-151.0.2-1"
+          "librewolf-unwrapped-151.0.2-1"
+        ];
       };
 
       systems = {
@@ -96,6 +108,7 @@
               stylix.nixosModules.stylix
               fcitx5-lotus.nixosModules.fcitx5-lotus
               impermanence.nixosModules.impermanence
+              hermes-agent.nixosModules.default
             ])
             ++ crossSystemModules;
 
