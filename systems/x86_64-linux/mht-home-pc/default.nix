@@ -35,6 +35,7 @@ in
         enable = true;
         envFiles = [ sops.templates."personal/hermes/env-file".path ];
       };
+      opensnitch.enable = true;
     };
 
     infra = {

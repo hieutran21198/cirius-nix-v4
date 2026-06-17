@@ -68,6 +68,10 @@
       };
     };
 
+    services = {
+      opensnitch.enable = true;
+    };
+
     apps = {
       podman = {
         enable = true;
@@ -110,6 +114,7 @@
       fastfetch.enable = true;
       nvim.enable = true;
       go-toolchain.enable = true;
+      nodejs-toolchain.enable = true;
       ms-teams.enable = true;
       only-office = {
         enable = true;
