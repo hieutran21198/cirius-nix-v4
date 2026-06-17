@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.${namespace}.apps.ai-assistant.hermes = {
+  options.${namespace}.services.hermes = {
     enable = lib.mkEnableOption "Enable hermes";
     envFiles = lib.${namespace}.makeListOption {
       ofType = lib.types.path;
@@ -16,13 +16,22 @@
 
   config =
     let
-      opts = config.${namespace}.apps.ai-assistant.hermes;
+      opts = config.${namespace}.services.hermes;
     in
     lib.mkIf opts.enable {
       services.hermes-agent = {
         enable = true;
         package = pkgs.llm-agents.hermes-agent;
-        settings = { };
+        settings = {
+          model = {
+            default = "claude-sonnet-4-6";
+            provider = "anthropic";
+          };
+          memory = {
+            memory_enabled = true;
+            user_profile_enabled = true;
+          };
+        };
         environmentFiles = opts.envFiles;
         addToSystemPackages = true;
       };

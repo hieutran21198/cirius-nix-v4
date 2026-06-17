@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    stable.url = "github:NixOS/nixpkgs/nixos-26.05";
     # core
     snowfall-flake = {
       url = "github:snowfallorg/flake";
@@ -94,10 +95,6 @@
     core.mkFlake {
       channels-config = {
         allowUnfree = true;
-        permittedInsecurePackages = [
-          "librewolf-151.0.2-1"
-          "librewolf-unwrapped-151.0.2-1"
-        ];
       };
 
       systems = {

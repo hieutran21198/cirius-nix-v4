@@ -6,6 +6,7 @@
   ...
 }:
 {
+  imports = [ (lib.mkAliasOptionModule [ namespace "infra" "nix" ] [ "nix" ]) ];
   options.${namespace}.infra = {
     zram = {
       enable = lib.${namespace}.makeBoolOption {
@@ -46,19 +47,16 @@
               directory = "/etc/NetworkManager/system-connections";
               mode = "0700";
             }
-
             "/var/lib/bluetooth"
             "/var/lib/nixos"
             "/var/lib/systemd"
             "/var/lib/NetworkManager"
-
             "/var/log"
           ]
           ++ config.${namespace}.infra.persistenceDirs;
 
           files = [
             "/etc/machine-id"
-
             # SSH host identity.
             "/etc/ssh/ssh_host_ed25519_key"
             "/etc/ssh/ssh_host_ed25519_key.pub"

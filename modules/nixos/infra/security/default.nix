@@ -3,9 +3,30 @@
   lib,
   config,
   pkgs,
+  host,
   ...
 }:
 {
+  imports = [
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "security"
+        "secrets"
+      ]
+      [ "sops" "secrets" ]
+    )
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "security"
+        "templates"
+      ]
+      [ "sops" "templates" ]
+    )
+  ];
   options.${namespace}.infra.security = {
     sopsFormat = lib.${namespace}.makeStrOption {
       default = "yaml";
@@ -27,6 +48,9 @@
       sops = {
         defaultSopsFormat = security.sopsFormat;
         age.keyFile = security.sopsKey;
+        useTmpfs = true;
+        defaultSopsFile = ../../../../secrets/${host}/default.${security.sopsFormat};
+        useSystemdActivation = true;
       };
     };
 }

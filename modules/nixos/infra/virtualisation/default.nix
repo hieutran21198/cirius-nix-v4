@@ -9,9 +9,6 @@
   options.${namespace}.infra.virtualisation = {
     enable = lib.mkEnableOption "Enable virtualisation";
     podman = {
-      enable = lib.${namespace}.makeBoolOption {
-        default = true;
-      };
       dockerCompat = lib.${namespace}.makeBoolOption {
         default = true;
       };
@@ -41,7 +38,8 @@
         oci-containers.backend = "podman";
 
         podman = {
-          inherit (opts.podman) enable dockerCompat;
+          enable = true;
+          inherit (opts.podman) dockerCompat;
 
           dockerSocket.enable = opts.podman.dockerSocket;
 
