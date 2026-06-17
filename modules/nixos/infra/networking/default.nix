@@ -15,6 +15,24 @@
       ]
       [ "networking" "firewall" ]
     )
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "networking"
+        "hosts"
+      ]
+      [ "networking" "hosts" ]
+    )
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "networking"
+        "virtualHosts"
+      ]
+      [ "services" "caddy" "virtualHosts" ]
+    )
   ];
   options.${namespace}.infra.networking = {
     enable = lib.mkEnableOption "Enable networking feature";
@@ -34,6 +52,9 @@
         inherit (infra.networking) hostName;
       };
       services.openssh = {
+        enable = true;
+      };
+      services.caddy = {
         enable = true;
       };
 

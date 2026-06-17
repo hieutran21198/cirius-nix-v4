@@ -18,6 +18,7 @@
         graphics.enable = lib.mkForce true;
         nvidia = {
           open = true;
+          package = config.boot.kernelPackages.nvidiaPackages.stable;
           nvidiaPersistenced = true;
           nvidiaSettings = true;
           modesetting.enable = true;
