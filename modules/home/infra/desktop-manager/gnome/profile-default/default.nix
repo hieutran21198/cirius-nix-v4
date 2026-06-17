@@ -7,6 +7,7 @@
   ...
 }:
 {
+  imports = [ ./_keybindings.nix ];
   options.${namespace}.infra.desktop-manager.gnome.profile-default = {
     blurEffect = {
       enable = lib.mkEnableOption "Blur effect";
