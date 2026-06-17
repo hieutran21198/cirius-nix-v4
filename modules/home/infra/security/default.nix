@@ -3,6 +3,7 @@
   lib,
   config,
   osConfig ? { },
+  host,
   ...
 }:
 {
@@ -44,6 +45,7 @@
         age = {
           keyFile = security.ageKey;
         };
+        defaultSopsFile = ../../../../secrets/${config.snowfallorg.user.name}__${host}/default.${security.sopsFormat};
         defaultSopsFormat = security.sopsFormat;
       };
       programs.fish.shellAbbrs = {
