@@ -25,6 +25,13 @@
       }) opts.providerAPIKeys;
     in
     lib.mkIf opts.enable {
+      home = {
+        packages = with pkgs; [
+          ast-grep
+          bun
+        ];
+        sessionVariables.OMO_AST_GREP_SG_PATH = "${pkgs.ast-grep}/bin/ast-grep";
+      };
       programs.opencode = {
         enable = true;
         package = pkgs.llm-agents.opencode;
@@ -44,7 +51,7 @@
           };
           agent = {
           };
-          provider = { } // providerWithAPIKeys;
+          provider = providerWithAPIKeys;
           compaction = {
             auto = true;
             prune = true;
@@ -61,10 +68,12 @@
           };
           mcp = { };
           plugin = [
-            "oh-my-opencode@latest"
+            "oh-my-openagent@latest"
+            "opencode-antigravity-auth@latest"
             "@mohak34/opencode-notifier@latest"
             "@franlol/opencode-md-table-formatter@latest"
             "opencode-claude-auth@latest"
+            "opencode-openai-codex-auth"
             [
               "@plannotator/opencode@latest"
               {

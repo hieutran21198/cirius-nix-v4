@@ -10,8 +10,13 @@
     ./secrets-buuuk.nix
     ./secrets-shared.nix
   ];
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  home = {
+    sessionVariables = {
+      EDITOR = "nvim";
+    };
+    file.".config/opencode/oh-my-openagent.json" = {
+      source = ../../../docs/ai/oh-my-opencode.schema.json;
+    };
   };
   ${namespace} = {
     infra = {

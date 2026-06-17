@@ -11,3 +11,6 @@ devenv.local.yaml
 
 # Editor
 .vscode
+
+# opencode
+.omo
