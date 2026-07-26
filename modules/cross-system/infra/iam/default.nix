@@ -15,6 +15,7 @@
       users = lib.${namespace}.makeAttrsOption {
         ofType = lib.types.submodule {
           options = {
+            enableHomeManager = lib.mkEnableOption "Enable home-manager for this user.";
             userSettings = lib.${namespace}.makeAttrsOption { };
             homeSettings = lib.${namespace}.makeAttrsOption { };
           };
@@ -27,7 +28,10 @@
     let
       cfg = config.${namespace}.infra.iam;
       users = lib.mapAttrs (_: userCfg: userCfg.userSettings) cfg.users;
-      homeUsers = lib.mapAttrs (_: userCfg: userCfg.homeSettings) cfg.users;
+      # filter who enable home manager only
+      homeUsers = lib.mapAttrs (_: userCfg: userCfg.homeSettings) (
+        lib.filterAttrs (_: userCfg: userCfg.enableHomeManager) cfg.users
+      );
     in
     {
       users = {
