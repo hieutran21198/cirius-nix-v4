@@ -1,0 +1,333 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "agents": {
+    // Communicators → Claude / Kimi / GLM
+    // Sisyphus, Metis
+    // These agents have Claude-optimized prompts — long, detailed,
+    // mechanics-driven. They need models that reliably follow complex,
+    // multi-layered instructions.
+    "sisyphus": {
+      // Recommendation for this:
+      // Claude family: Fable 5 · Opus 4.8 · Opus 4.7 · Sonnet 4.6
+      // Kimi: K2.7 · K2.6 · K2.5
+      // GLM: 5 / 5.1 (acceptable — slightly looser on the long nested workflows)
+      // GPT: 5.4 / 5.5 (dedicated GPT prompt path exists — supported, but
+      // still NOT the recommended default for the orchestrator)
+      // MiniMax / Qwen / MiMo / DeepSeek as Sisyphus — JUST DON'T
+      //
+      // Claude > kimi > GLM > GPT for orchestrator.
+      "model": "anthropic/claude-opus-4-8",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-sonnet-4-6",
+        },
+        {
+          "model": "opencode-go/kimi-k2.7-code",
+        },
+        {
+          "model": "opencode-go/glm-5.2",
+        },
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "medium",
+        },
+      ],
+    },
+    "metis": {
+      // These agents have Claude-optimized prompts — long, detailed,
+      // mechanics-driven. They need models that reliably follow complex,
+      // multi-layered instructions.
+      "model": "anthropic/claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+        {
+          "model": "kimi-k2.7-code",
+        },
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "high",
+        },
+        {
+          "model": "opencode-go/glm-5.1",
+        },
+      ],
+    },
+    // Model-Flexible Planners → Claude preferred, GPT supported
+    "prometheus": {
+      "model": "anthropic/claude-opus-4-7",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "high",
+        },
+        {
+          "model": "opencode-go/glm-5.1",
+        },
+      ],
+    },
+    "atlas": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "opencode-go/kimi-k2.6",
+        },
+        {
+          "model": "opencode-go/gpt-5.5",
+          "variant": "medium",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+      ],
+    },
+    // deep specialists → These agents are built for GPT's principle-driven
+    // style. Their prompts assume autonomous, goal-oriented execution. Don't
+    // override to Claude.
+    "hephaestus": {
+      // Hephaestus is the developer who stays in their room coding all day.
+      // Doesn't talk much. Might seem socially awkward. But give them a hard
+      // technical problem and they'll emerge three hours later with a solution
+      // nobody else could have found.
+      //
+      // This is why Hephaestus uses GPT-5.5. GPT-5.5 is built for exactly this:
+      //
+      //     Deep, autonomous exploration without hand-holding
+      //     Multi-file reasoning across complex codebases
+      //     Principle-driven execution (give a goal, not a recipe)
+      //     Working independently for extended periods
+      //
+      // Using Hephaestus with GLM or Kimi would be like assigning your most
+      // communicative, sociable developer to sit alone and do nothing but deep
+      // technical work. They'd get it done eventually, but they wouldn't shine
+      // — you'd be wasting exactly the skills that make them valuable.
+      "model": "openai/gpt-5.5",
+      "variant": "medium",
+      "fallback_models": [],
+    },
+    "oracle": {
+      "model": "openai/gpt-5.5",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+        {
+          "model": "opencode-go/glm-5.1",
+        },
+      ],
+    },
+    "momus": {
+      "model": "openai/gpt-5.5",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+        {
+          "model": "opencode-go/glm-5.1",
+        },
+      ],
+    },
+    // Utilities
+    "librarian": {
+      "model": "openai/gpt-5.4-mini-fast",
+      "fallback_models": [
+        {
+          "model": "opencode-go/qwen3.5-plus",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+        {
+          "model": "anthropic/claude-haiku-4-5",
+        },
+        {
+          "model": "openai/gpt-5.4-nano",
+        },
+      ],
+    },
+    "explore": {
+      "model": "openai/gpt-5.4-mini-fast",
+      "fallback_models": [
+        {
+          "model": "opencode-go/qwen3.5-plus",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+        {
+          "model": "anthropic/claude-haiku-4-5",
+        },
+        {
+          "model": "openai/gpt-5.4-nano",
+        },
+      ],
+    },
+    "multimodal-looker": {
+      "model": "openai/gpt-5.5",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "opencode-go/kimi-k2.6",
+        },
+        {
+          "model": "deepseek/deepseek-chat",
+        },
+        {
+          "model": "openai/gpt-5-nano",
+        },
+      ],
+    },
+
+    "sisyphus-junior": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "opencode-go/kimi-k2.6",
+        },
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "medium",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+      ],
+    },
+  },
+  "categories": {
+    "visual-engineering": {
+      // Frontend, UI, CSS, design
+      "model": "opencode-go/glm-5.2",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+        {
+          "model": "opencode-go/kimi-k2.7-code",
+        },
+      ],
+    },
+    "ultrabrain": {
+      // Maximum reasoning needed
+      "model": "openai/gpt-5.5",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+        {
+          "model": "opencode-go/glm-5.1",
+        },
+      ],
+    },
+    "deep": {
+      // Deep coding, complex logic
+      "model": "openai/gpt-5.5",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-opus-4-8",
+          "variant": "max",
+        },
+      ],
+    },
+    "artistry": {
+      // Creative, novel approaches
+      "model": "anthropic/claude-opus-4-8",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "openai/gpt-5.5",
+        },
+      ],
+    },
+    "quick": {
+      // Simple, fast tasks
+      "model": "openai/gpt-5.4-mini",
+      "fallback_models": [
+        {
+          "model": "anthropic/claude-haiku-4-5",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+        {
+          "model": "deepseek/deepseek-chat",
+        },
+      ],
+    },
+    "unspecified-low": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "medium",
+        },
+        {
+          "model": "opencode-go/kimi-k2.6",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+      ],
+    },
+    "unspecified-high": {
+      // General complex work
+      "model": "anthropic/claude-opus-4-8",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "openai/gpt-5.5",
+          "variant": "high",
+        },
+        {
+          "model": "opencode-go/glm-5.2",
+        },
+        {
+          "model": "opencode-go/kimi-k2.7-code",
+        },
+      ],
+    },
+    "writing": {
+      "model": "deepseek/deepseek-chat",
+      "fallback_models": [
+        {
+          "model": "opencode-go/kimi-k2.6",
+        },
+        {
+          "model": "anthropic/claude-sonnet-4-6",
+        },
+        {
+          "model": "opencode-go/minimax-m3",
+        },
+        {
+          "model": "opencode-go/minimax-m2.7",
+        },
+      ],
+    },
+  },
+}
