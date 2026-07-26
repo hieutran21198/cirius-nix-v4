@@ -1,4 +1,1 @@
-{ inputs, ... }:
-_: prev: {
-  firefox-extensions = inputs.firefox-addons.packages.${prev.stdenv.hostPlatform.system};
-}
+{ inputs, ... }: inputs.firefox-addons.overlays.default

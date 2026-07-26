@@ -1,1 +1,1 @@
-{ inputs, ... }: inputs.llm-agents.overlays.default
+{ inputs, ... }: inputs.llm-agents.overlays.shared-nixpkgs
