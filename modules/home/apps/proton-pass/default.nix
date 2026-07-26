@@ -13,13 +13,18 @@
   config =
     let
       inherit (config.${namespace}) apps;
-      firefoxExt = pkgs.firefox-extensions.proton-pass;
+      firefoxExt = pkgs.firefox-addons.proton-pass;
     in
     lib.mkIf apps.proton-pass.enable {
-      home.packages = with pkgs; [
-        proton-pass
-        proton-pass-cli
-      ];
+      home = {
+        packages = with pkgs; [
+          proton-pass
+          proton-pass-cli
+        ];
+        sessionVariables = {
+          "PROTON_PASS_LINUX_KEYRING" = "dbus";
+        };
+      };
       ${namespace} = {
         infra.desktop-manager = {
           gnome.setFavoriteApps = [
