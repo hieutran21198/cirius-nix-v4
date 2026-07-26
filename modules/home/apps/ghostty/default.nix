@@ -29,6 +29,7 @@
           window-padding-x = 8;
           window-padding-y = 8;
           window-padding-balance = true;
+          unfocused-split-opacity = 1.0;
 
           keybind = [
             # Pane management
