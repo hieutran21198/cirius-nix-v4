@@ -11,6 +11,9 @@
   ];
   options.${namespace}.apps.git = { };
   config = {
+    ${namespace}.infra.shell.fish.shellAbbrs = {
+      "ght" = "export GITHUB_TOKEN=$(gh auth token)";
+    };
     programs = {
       git = {
         enable = true;
