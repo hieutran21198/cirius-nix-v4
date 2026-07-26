@@ -14,6 +14,9 @@
       opts = config.${namespace}.apps.devenv;
     in
     lib.mkIf opts.enable {
-      home.packages = with pkgs; [ devenv ];
+      programs.devenv = {
+        enable = true;
+        package = pkgs.devenv;
+      };
     };
 }
