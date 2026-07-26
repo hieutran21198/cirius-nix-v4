@@ -8,13 +8,9 @@
 {
   options.${namespace}.apps.ai.opencode = {
     enable = lib.mkEnableOption "Enable opencode";
-    webEnvFile = lib.${namespace}.makePathOption {
-      nullable = true;
-      default = null;
-    };
     providerAPIKeys = lib.${namespace}.makeAttrsOption {
-      default = {
-      };
+      ofType = lib.types.str;
+      default = { };
     };
   };
   config =
@@ -35,12 +31,6 @@
       programs.opencode = {
         enable = true;
         package = pkgs.llm-agents.opencode;
-        tui = { };
-        web = {
-          enable = true;
-          environmentFile = opts.webEnvFile;
-          extraArgs = [ ];
-        };
         settings = {
           autoupdate = false;
           formatter = true;
@@ -68,22 +58,22 @@
           };
           mcp = { };
           plugin = [
-            "oh-my-openagent@latest"
             "opencode-antigravity-auth@latest"
             "@mohak34/opencode-notifier@latest"
             "@franlol/opencode-md-table-formatter@latest"
             "opencode-claude-auth@latest"
             "opencode-openai-codex-auth"
-            [
-              "@plannotator/opencode@latest"
-              {
-                "workflow" = "plan-agent";
-                "planningAgents" = [
-                  "plan"
-                  "sisyphus" # depended on on-my-opencode
-                ];
-              }
-            ]
+            #   "oh-my-openagent@latest"
+            #   [
+            #     "@plannotator/opencode@latest"
+            #     {
+            #       "workflow" = "plan-agent";
+            #       "planningAgents" = [
+            #         "plan"
+            #         "sisyphus" # depended on on-my-opencode
+            #       ];
+            #     }
+            #   ]
           ];
           attachment = {
             image = {
