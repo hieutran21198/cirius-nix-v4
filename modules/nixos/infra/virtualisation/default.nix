@@ -8,6 +8,11 @@
 {
   options.${namespace}.infra.virtualisation = {
     enable = lib.mkEnableOption "Enable virtualisation";
+    distroBox = {
+      enable = lib.${namespace}.makeBoolOption {
+        default = false;
+      };
+    };
     podman = {
       dockerCompat = lib.${namespace}.makeBoolOption {
         default = true;
@@ -30,10 +35,19 @@
       opts = infra.virtualisation;
     in
     lib.mkIf opts.enable {
+      programs.virt-manager.enable = true;
+
       # this currently break.
       # hardware.nvidia-container-toolkit = { inherit (config.${namespace}.infra.nvidia) enable; };
       virtualisation = {
         containers.enable = true;
+
+        libvirtd = {
+          enable = true;
+          qemu = {
+            swtpm.enable = true;
+          };
+        };
 
         oci-containers.backend = "podman";
 
@@ -54,9 +68,11 @@
         };
       };
 
-      environment.systemPackages = lib.optionals config.${namespace}.infra.nvidia.enable [
-        pkgs.nvidia-container-toolkit
-      ];
+      environment.systemPackages =
+        lib.optionals config.${namespace}.infra.nvidia.enable [
+          pkgs.nvidia-container-toolkit
+        ]
+        ++ (lib.optional opts.distroBox.enable pkgs.distrobox);
 
       ${namespace}.infra = {
         persistenceDirs = [

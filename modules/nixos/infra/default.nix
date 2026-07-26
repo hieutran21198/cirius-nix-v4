@@ -38,6 +38,7 @@
         systemPackages = with pkgs; [
           parted
           util-linux
+          systemctl-tui
         ];
         persistence."/persist" = {
           hideMounts = true;

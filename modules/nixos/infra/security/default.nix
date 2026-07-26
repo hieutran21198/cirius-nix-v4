@@ -13,6 +13,15 @@
         namespace
         "infra"
         "security"
+        "pki"
+      ]
+      [ "security" "pki" ]
+    )
+    (lib.mkAliasOptionModule
+      [
+        namespace
+        "infra"
+        "security"
         "secrets"
       ]
       [ "sops" "secrets" ]

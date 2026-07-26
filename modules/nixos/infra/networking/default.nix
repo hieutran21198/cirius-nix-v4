@@ -39,6 +39,9 @@
     hostName = lib.${namespace}.makeStrOption {
       default = "nixos";
     };
+    avahiEnabled = lib.${namespace}.makeBoolOption {
+      default = false;
+    };
   };
   config =
     let
@@ -51,11 +54,19 @@
         };
         inherit (infra.networking) hostName;
       };
-      services.openssh = {
-        enable = true;
-      };
-      services.caddy = {
-        enable = true;
+      services = {
+        avahi = lib.mkIf infra.networking.avahiEnabled {
+          enable = true;
+          nssmdns4 = true;
+          nssmdns6 = true;
+          openFirewall = true;
+        };
+        openssh = {
+          enable = true;
+        };
+        caddy = {
+          enable = true;
+        };
       };
 
       # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
