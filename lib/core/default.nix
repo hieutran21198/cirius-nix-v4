@@ -3,7 +3,6 @@
   ...
 }:
 let
-
   makePrimitiveOption =
     primitiveType:
     {
@@ -51,7 +50,6 @@ in
       ...
     }@inputs:
     makePrimitiveOption (lib.types.attrsOf ofType) inputs;
-
   failWhen =
     { condition, message, ... }:
     {

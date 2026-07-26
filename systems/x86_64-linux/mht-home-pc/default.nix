@@ -29,18 +29,60 @@ in
 
   # namespace config.
   ${namespace} = {
+    containers = {
+      dockhand = {
+        enable = true;
+        port = 2000;
+        dependsOn = [ "postgres-dockhand" ];
+        environmentFiles = [ sops.secrets."personal/dockhand/env".path ];
+      };
+      sonarqube = {
+        enable = true;
+        port = 2001;
+        dependsOn = [ "postgres-sonarqube" ];
+        environmentFiles = [ sops.secrets."personal/sonarqube/env".path ];
+      };
+      postgres = {
+        enable = true;
+        databases = {
+          dockhand = {
+            port = 5401;
+            environmentFiles = [ sops.secrets."personal/postgres/dockhand/env".path ];
+          };
+          sonarqube = {
+            port = 5402;
+            environmentFiles = [ sops.secrets."personal/postgres/sonarqube/env".path ];
+          };
+        };
+      };
+    };
     services = {
+      music-server = {
+        enable = true;
+        envFile = sops.templates."personal/music-server/env-file".path;
+        musicDir = "/mnt/main-data/Music";
+      };
+      cloudflare-warp.enable = true;
       gaming.enable = true;
       hermes = {
-        enable = true;
+        enable = false;
         envFiles = [ sops.templates."personal/hermes/env-file".path ];
       };
       opensnitch.enable = true;
+      libre-translation = {
+        enable = false;
+        port = 5000;
+        user = "libre-translation";
+        group = "libre-translation";
+      };
     };
 
     infra = {
       nix = {
         package = pkgs.lixPackageSets.stable.lix;
+        extraOptions = ''
+          !include ${sops.secrets."personal/nix/extra-options".path}
+        '';
         settings = {
           allowed-users = [ "cirius" ];
           auto-optimise-store = true;
@@ -66,12 +108,40 @@ in
         };
       };
       ai = {
-        llama-cpp.enable = true;
+        llama-cpp.enable = false;
       };
       security = {
+        pki = {
+          # sudo cp /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt ./assets/caddy-root.crt
+          certificateFiles = [ ../../../assets/caddy-root.crt ];
+        };
         secrets = {
+          "personal/sonarqube/env" = {
+            key = "sonarqube/env";
+            mode = "0400";
+          };
+          "personal/dockhand/env" = {
+            key = "dockhand/env";
+            mode = "0400";
+          };
+          "personal/postgres/sonarqube/env" = {
+            key = "postgres/sonarqube/env";
+            mode = "0400";
+          };
+          "personal/postgres/dockhand/env" = {
+            key = "postgres/dockhand/env";
+            mode = "0400";
+          };
           "personal/api-key/deepseek" = {
             key = "ai/deepseek/api-key";
+            mode = "0400";
+          };
+          "personal/nix/extra-options" = {
+            key = "nix/extra-options";
+            mode = "0400";
+          };
+          "personal/music-server/override-env" = {
+            key = "music-server/env";
             mode = "0400";
           };
         };
@@ -79,6 +149,11 @@ in
           "personal/hermes/env-file" = {
             content = ''
               DEEPSEEK_API_KEY=${sops.secrets."personal/api-key/deepseek".path}
+            '';
+          };
+          "personal/music-server/env-file" = {
+            content = ''
+              ${config.sops.placeholder."personal/music-server/override-env"}
             '';
           };
         };
@@ -100,33 +175,42 @@ in
         };
       };
       nvidia.enable = true;
-      virtualisation.enable = true;
+      virtualisation = {
+        enable = true;
+        distroBox = {
+          enable = true;
+        };
+      };
       networking =
         let
           hostName = "mht-home-pc";
-          opencodeHost = "opencode.${hostName}";
+
           opendesignHost = "opendesign.${hostName}";
+          libreTranslationHost = "libre-translation.${hostName}";
+          dockhandHost = "dockhand.${hostName}";
+          sonarqubeHost = "sonarqube.${hostName}";
+          syncthingHost = "syncthing.${hostName}";
+          musicServerHost = "music.${hostName}";
         in
         {
           enable = true;
+          avahiEnabled = true;
           inherit hostName;
           hosts = {
             "127.0.0.1" = [
-              opencodeHost
               opendesignHost
+              libreTranslationHost
+              dockhandHost
+              sonarqubeHost
+              syncthingHost
+              musicServerHost
             ];
           };
           # Open ports in the firewall.
           firewall = {
             enable = true;
-            # allowedTCPPorts = [ ... ];
-            # allowedUDPPorts = [ ... ];
           };
           virtualHosts = {
-            ${opencodeHost}.extraConfig = ''
-              tls internal
-              reverse_proxy 127.0.0.1:10200
-            '';
             ${opendesignHost}.extraConfig =
               let
                 openDesignWeb = inputs.open-design.packages.${pkgs.system}.web;
@@ -155,6 +239,25 @@ in
                   encode gzip
                 }
               '';
+            ${libreTranslationHost}.extraConfig = ''
+              reverse_proxy 127.0.0.1:${toString config.${namespace}.services.libre-translation.port}
+            '';
+            ${dockhandHost}.extraConfig = ''
+              tls internal
+              reverse_proxy 127.0.0.1:${toString config.${namespace}.containers.dockhand.port}
+            '';
+            ${sonarqubeHost}.extraConfig = ''
+              tls internal
+              reverse_proxy 127.0.0.1:${toString config.${namespace}.containers.sonarqube.port}
+            '';
+            ${syncthingHost}.extraConfig = ''
+              tls internal
+              reverse_proxy 127.0.0.1:2002
+            '';
+            "${musicServerHost}".extraConfig = ''
+              tls internal
+              reverse_proxy 0.0.0.0:${toString config.${namespace}.services.music-server.port}
+            '';
           };
         };
       input-method = {
@@ -170,6 +273,7 @@ in
       iam = {
         groups = {
           mht-home-pc-admins = { };
+          libre-translation = { };
         };
         users =
           let
@@ -178,20 +282,31 @@ in
             inherit (shell) fish;
           in
           {
+            libre-translation = {
+              userSettings = {
+                isSystemUser = true;
+                group = groups.libre-translation.name;
+              };
+            };
             # Define a user account. Don't forget to set a password with ‘passwd’.
             cirius = {
+              enableHomeManager = true;
               userSettings = {
                 isNormalUser = true;
                 extraGroups = [
+                  config.${namespace}.services.music-server.group
                   groups.mht-home-pc-admins.name
+                  groups.libre-translation.name
                   "networkmanager"
                   "wheel"
-                ];
+                ]
+                ++ (lib.optional config.${namespace}.infra.virtualisation.enable "libvirtd");
                 shell = if fish.enable then fish.package else pkgs.bash;
               };
               homeSettings = {
                 home = {
                   inherit stateVersion;
+                  # nixpkgs.config.allowUnfree = true;
                 };
               };
             };
@@ -315,7 +430,7 @@ in
 
       for dir in Documents Music Pictures Videos; do
         install -d -m 0755 -o cirius -g users "/home/cirius/$dir"
-        mkdir -p "/mnt/main-data/$dir"
+        install -d -m 0755 -o cirius -g users "/mnt/main-data/$dir"
       done
     '';
   };
@@ -344,28 +459,12 @@ in
 
   security.rtkit.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     neovim
     git
     github-cli
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
 
   system = {
     inherit stateVersion;

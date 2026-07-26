@@ -56,6 +56,12 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    codex-desktop-linux = {
+      url = "github:hieutran21198/codex-desktop-linux";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -124,6 +130,7 @@
           nixvim.homeModules.nixvim
           stylix.homeModules.stylix
           open-design.homeManagerModules.default
+          codex-desktop-linux.homeManagerModules.default
         ];
       };
 

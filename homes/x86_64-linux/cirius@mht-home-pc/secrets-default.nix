@@ -42,19 +42,20 @@ in
           key = "aws/config";
           mode = "0400";
         };
+        "personal/syncthing/password" = {
+          key = "syncthing/password";
+          mode = "0400";
+        };
       };
       templates = {
         "personal/opendesign/env-file" = {
           content = "";
         };
-        "personal/opencode/env-file" = {
-          content = ''
-            OPENCODE_SERVER_USERNAME=${user.name}
-
-            # secured configuration
-            ${sops.placeholder."personal/opencode/secured-env"}
-          '';
-        };
+      };
+    };
+    services = {
+      syncthing = {
+        passwordFile = config.sops.secrets."personal/syncthing/password".path;
       };
     };
     apps = {
@@ -69,7 +70,6 @@ in
       ai = {
         opendesign.envFile = sops.templates."personal/opendesign/env-file".path;
         opencode = {
-          webEnvFile = sops.templates."personal/opencode/env-file".path;
           providerAPIKeys = {
             deepseek = sops.secrets."personal/api-key/deepseek".path;
           };
