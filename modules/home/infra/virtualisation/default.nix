@@ -17,7 +17,6 @@ in
       default = "docker.io";
     };
   };
-
   config =
     let
       opts = config.${namespace}.infra.virtualisation;

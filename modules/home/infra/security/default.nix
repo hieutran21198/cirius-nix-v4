@@ -4,6 +4,7 @@
   config,
   osConfig ? { },
   host,
+  pkgs,
   ...
 }:
 {
@@ -41,6 +42,7 @@
       inherit (config.${namespace}.infra) security;
     in
     {
+      home.packages = with pkgs; [ secretspec ];
       sops = {
         age = {
           keyFile = security.ageKey;

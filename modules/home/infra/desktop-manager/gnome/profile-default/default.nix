@@ -30,6 +30,7 @@
     let
       inherit (config.${namespace}.infra.desktop-manager) gnome;
       defaultExtensions = [
+        { package = pkgs.gnomeExtensions.appindicator; }
         { package = pkgs.gnomeExtensions.user-themes; }
         {
           package = pkgs.gnomeExtensions.dynamic-music-pill;
@@ -61,6 +62,14 @@
               invert-speed = false;
             };
           };
+        }
+        {
+          package = pkgs.gnomeExtensions.screentospace;
+          settings = { };
+        }
+        {
+          package = pkgs.gnomeExtensions.night-theme-switcher;
+          settings = { };
         }
         {
           package = pkgs.gnomeExtensions.caffeine;
@@ -156,12 +165,20 @@
         ])
         ++ (map (x: x.package) extensions);
 
-      programs.nixvim = {
-        extraConfigLuaPost = ''
-          vim.cmd [[ colorscheme base16-chinoiserie-midnight ]]
-        '';
-        colorschemes.base16 = {
-          enable = true;
+      programs = {
+        nixvim = {
+          colorschemes = {
+            one.enable = true;
+          };
+          colorscheme = "one";
+          opts.termguicolors = lib.mkForce true;
+        };
+        ghostty = {
+          settings = {
+            theme = lib.mkForce "dark:Atom One Dark,light:Atom One Light";
+            minimum-contrast = 1;
+            background-opacity = lib.mkForce 0.9;
+          };
         };
       };
 
