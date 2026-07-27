@@ -2,6 +2,7 @@
   namespace,
   lib,
   pkgs,
+  osConfig ? { },
   ...
 }:
 {
@@ -21,9 +22,11 @@
   };
   config = {
     home = {
-      persistence."/persist" = {
-        directories = [ ];
-        files = [ ];
+      persistence = lib.mkIf osConfig.${namespace}.infra.enablePersistence {
+        "/persist" = {
+          directories = [ ];
+          files = [ ];
+        };
       };
       packages = with pkgs; [
         base16-schemes

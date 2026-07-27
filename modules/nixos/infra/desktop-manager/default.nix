@@ -10,8 +10,11 @@ in
   options = {
     ${namespace}.infra.desktop-manager = {
       engine = lib.${namespace}.makeEnumOption {
-        acceptedList = with supportedDesktopManagers; [ gnome ];
-        default = "gnome";
+        acceptedList = with supportedDesktopManagers; [
+          none
+          gnome
+        ];
+        default = supportedDesktopManagers.none;
       };
     };
   };

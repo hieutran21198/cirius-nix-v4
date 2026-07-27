@@ -28,7 +28,7 @@
       ${namespace}.infra.desktop-manager.gnome = {
         enabled = lib.mkForce (osConfig.${namespace}.infra.desktop-manager.engine == "gnome");
       };
-      dconf = {
+      dconf = lib.mkIf gnome.enabled {
         enable = true;
         settings = {
           "org/gnome/shell" = {

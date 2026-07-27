@@ -3,6 +3,7 @@
   lib,
   namespace,
   pkgs,
+  osConfig ? { },
   ...
 }:
 {
@@ -64,8 +65,9 @@
     let
       opts = config.${namespace}.infra.chromiumAppMaker;
       chromiumExe = lib.getExe pkgs.chromium;
+      dmEnabled = osConfig.${namespace}.infra.desktop-manager.engine != "none";
     in
-    {
+    lib.mkIf dmEnabled {
       home.packages = with pkgs; [ chromium ];
       xdg.desktopEntries = lib.mapAttrs (name: attrs: {
         inherit (attrs)

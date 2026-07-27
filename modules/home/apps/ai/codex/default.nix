@@ -3,6 +3,7 @@
   namespace,
   pkgs,
   lib,
+  osConfig ? { },
   ...
 }:
 {
@@ -14,17 +15,15 @@
   config =
     let
       opts = config.${namespace}.apps.ai.codex;
+      dmEnabled = osConfig.${namespace}.infra.desktop-manager.engine != "none";
     in
     lib.mkIf opts.enable {
       home = {
         packages = [
           opts.codexCLIPackage
-        ]
-        ++ (with pkgs; [
-          # llm-agents.oh-my-codex
-        ]);
+        ];
       };
-      programs.codexDesktopLinux = {
+      programs.codexDesktopLinux = lib.mkIf dmEnabled {
         enable = true;
         cliPackage = opts.codexCLIPackage;
         computerUseUi.enable = true;

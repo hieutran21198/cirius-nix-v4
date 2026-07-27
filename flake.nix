@@ -17,6 +17,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     darwin = {
       url = "github:lnl7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -112,6 +113,7 @@
               fcitx5-lotus.nixosModules.fcitx5-lotus
               impermanence.nixosModules.impermanence
               hermes-agent.nixosModules.default
+              nixos-wsl.nixosModules.default
             ])
             ++ crossSystemModules;
 
