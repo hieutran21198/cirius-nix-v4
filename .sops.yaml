@@ -1,6 +1,8 @@
 keys:
   - &mht-home-pc age1uq3sazn8wsdedjhw367cns4tf80kr63usdgu3szpfv2s8ntqdesq2mpa4q
   - &cirius__mht-home-pc age1p495yz2np3kxa03qs2370nsl4jsv22fggs3r3wq7zv6nqn4n29xqg0znr9
+  - &mht-win-home-pc age12uuq6kpu8tavla9jfsu3wz5s5dwfpyv6vcv7gd54a06294w22p4q9mvh9m
+  - &cirius__mht-win-home-pc age138fermrnh7d7sczchptuz29e5gph44fk2tfg8u74e4yk5c0r6qwqkulx62
 creation_rules:
   - path_regex: secrets/mht-home-pc/.+[^/]\.(yaml|json|env|ini)$
     key_groups:
@@ -10,3 +12,11 @@ creation_rules:
     key_groups:
       - age:
          - *cirius__mht-home-pc
+  - path_regex: secrets/mht-win-home-pc/.+[^/]\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *mht-win-home-pc
+  - path_regex: secrets/cirius__mht-win-home-pc/.+[^/]\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *cirius__mht-win-home-pc

@@ -49,6 +49,13 @@ in
             };
           };
       };
+      security = {
+        pki = {
+          # sudo cp /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt ./assets/caddy-root.crt
+          certificateFiles = [ ../../../assets/caddy-root.crt ];
+        };
+        sopsKey = "/var/lib/age-keys/mht-win-home-pc";
+      };
       desktop-manager = {
         enable = true;
         engine = "none";
@@ -77,12 +84,6 @@ in
             "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
             "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
           ];
-        };
-      };
-      security = {
-        pki = {
-          # sudo cp /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt ./assets/caddy-root.crt
-          certificateFiles = [ ../../../assets/caddy-root.crt ];
         };
       };
     };
