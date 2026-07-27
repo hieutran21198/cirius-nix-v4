@@ -4,6 +4,9 @@
   ...
 }:
 {
+  imports = [
+    ./secrets-default.nix
+  ];
   home = {
     sessionVariables = {
       EDITOR = "nvim";
