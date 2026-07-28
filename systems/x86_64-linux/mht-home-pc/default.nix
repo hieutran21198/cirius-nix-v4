@@ -57,6 +57,7 @@ in
       };
     };
     services = {
+      tailscale.enable = true;
       music-server = {
         enable = true;
         envFile = sops.templates."personal/music-server/env-file".path;

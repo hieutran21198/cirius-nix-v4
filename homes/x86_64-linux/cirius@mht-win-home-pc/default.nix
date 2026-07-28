@@ -32,6 +32,7 @@
     };
 
     apps = {
+      btop.enable = true;
       fabric = {
         enable = true;
       };

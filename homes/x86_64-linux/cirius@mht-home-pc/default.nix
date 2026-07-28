@@ -98,6 +98,10 @@
         gnome = {
           profile = "default";
           profile-default = {
+            wallpaper = {
+              default = ../../../assets/halloween-backiee-5K.jpg;
+              dark = ../../../assets/halloween-backiee-5K.jpg;
+            };
             blurEffect = {
               enable = true;
             };
@@ -274,6 +278,7 @@
     };
 
     apps = {
+      btop.enable = true;
       mailspring = {
         enable = true;
       };

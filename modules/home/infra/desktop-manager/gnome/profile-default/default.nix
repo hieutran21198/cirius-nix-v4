@@ -9,6 +9,16 @@
 {
   imports = [ ./_keybindings.nix ];
   options.${namespace}.infra.desktop-manager.gnome.profile-default = {
+    wallpaper = {
+      default = lib.${namespace}.makePathOption {
+        nullable = true;
+        description = "Default wallpaper for the GNOME desktop manager";
+      };
+      dark = lib.${namespace}.makePathOption {
+        nullable = true;
+        description = "Dark wallpaper for the GNOME desktop manager";
+      };
+    };
     blurEffect = {
       enable = lib.mkEnableOption "Blur effect";
       dashToDock = lib.${namespace}.makeBoolOption { default = true; };
@@ -114,6 +124,7 @@
             "/" = {
               rounded-blur-found = false;
               settings-version = 2;
+              pipelines = "{'pipeline_default': {'name': <'Default'>, 'effects': <[<{'type': <'native_static_gaussian_blur'>, 'id': <'effect_000000000000'>, 'params': <{'radius': <30>, 'brightness': <0.59999999999999998>}>}>]>}, 'pipeline_default_rounded': {'name': <'Default rounded'>, 'effects': <[<{'type': <'native_static_gaussian_blur'>, 'id': <'effect_000000000001'>, 'params': <{'radius': <30>, 'brightness': <0.59999999999999998>, 'unscaled_radius': <30>}>}>, <{'type': <'corner'>, 'id': <'effect_000000000002'>, 'params': <{'radius': <16>}>}>]>}}";
             };
             dash-to-dock = {
               blur = blurEffect.dashToDock;
@@ -123,6 +134,7 @@
             };
             panel = {
               inherit (blurEffect) brightness sigma;
+
               corner-radius = 0;
             };
             appfolder = {
@@ -130,6 +142,15 @@
             };
             window-list = {
               inherit (blurEffect) brightness sigma;
+            };
+            applications = {
+              blacklist = [ ];
+              blur = true;
+              inherit (blurEffect) brightness sigma;
+              enable-all = true;
+              opacity = 215;
+              static-blur = true;
+              pipeline = "pipeline_default_rounded";
             };
           };
       });
@@ -159,11 +180,13 @@
       );
     in
     lib.mkIf (gnome.enabled && gnome.profile == "default") {
-      home.packages =
-        (with pkgs; [
-          morewaita-icon-theme
-        ])
-        ++ (map (x: x.package) extensions);
+      home = {
+        packages =
+          (with pkgs; [
+            morewaita-icon-theme
+          ])
+          ++ (map (x: x.package) extensions);
+      };
 
       programs = {
         nixvim = {
@@ -175,7 +198,7 @@
         };
         ghostty = {
           settings = {
-            theme = lib.mkForce "dark:Atom One Dark,light:Atom One Light";
+            theme = lib.mkForce "Atom One Dark";
             minimum-contrast = 1;
             background-opacity = lib.mkForce 0.9;
           };
@@ -186,6 +209,14 @@
         settings = {
           "org/gnome/shell" = {
             enabled-extensions = map (x: x.package.extensionUuid) extensions;
+          };
+          "org/gnome/desktop/background" = {
+            picture-uri = lib.mkIf (
+              gnome.profile-default.wallpaper.default != null
+            ) "file://${lib.toString gnome.profile-default.wallpaper.default}";
+            picture-uri-dark = lib.mkIf (
+              gnome.profile-default.wallpaper.dark != null
+            ) "file://${lib.toString gnome.profile-default.wallpaper.dark}";
           };
         }
         // extensionSettings;
