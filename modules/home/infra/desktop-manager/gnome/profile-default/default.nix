@@ -78,10 +78,6 @@
           settings = { };
         }
         {
-          package = pkgs.gnomeExtensions.night-theme-switcher;
-          settings = { };
-        }
-        {
           package = pkgs.gnomeExtensions.caffeine;
           settings = {
             "/" = {
