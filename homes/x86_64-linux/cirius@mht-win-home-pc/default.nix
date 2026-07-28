@@ -45,6 +45,7 @@
       fastfetch.enable = true;
       nvim.enable = true;
       markdown-toolchain.enable = true;
+      cpp-toolchain.enable = true;
       go-toolchain.enable = true;
       nodejs-toolchain.enable = true;
       fzf.enable = true;
