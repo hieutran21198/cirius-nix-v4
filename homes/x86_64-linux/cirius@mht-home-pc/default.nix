@@ -278,6 +278,7 @@
     };
 
     apps = {
+      starship.enable = true;
       btop.enable = true;
       mailspring = {
         enable = true;
