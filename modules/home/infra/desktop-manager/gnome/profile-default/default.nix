@@ -206,6 +206,14 @@
           "org/gnome/shell" = {
             enabled-extensions = map (x: x.package.extensionUuid) extensions;
           };
+          "org/gnome/desktop/peripherals/keyboard" = {
+            # prevent repeating keys to be too fast
+            repeat = true;
+            repeat-interval = 30;
+
+            # Key repeat delay when keeping a key pressed (in milliseconds). The default is 500ms.
+            delay = 500;
+          };
           "org/gnome/desktop/background" = {
             picture-uri = lib.mkIf (
               gnome.profile-default.wallpaper.default != null

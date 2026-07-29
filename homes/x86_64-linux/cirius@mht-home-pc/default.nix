@@ -64,6 +64,7 @@
             port = 8001;
             model = "fim-qwen-3b-default";
           };
+          integrateNvim = false;
         };
       };
       fonts = {

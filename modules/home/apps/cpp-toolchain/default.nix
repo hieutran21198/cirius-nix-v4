@@ -16,7 +16,6 @@
     in
     lib.mkIf opts.enable {
       home.packages = with pkgs; [
-        gcc
         clang
         clang-tools
         cmake
