@@ -173,6 +173,9 @@
               };
             };
           };
+          test.adapters.golang = {
+            enable = true;
+          };
         };
       };
     };

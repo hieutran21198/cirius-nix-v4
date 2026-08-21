@@ -46,9 +46,11 @@
           (mkKeymap "<leader>lci" "<cmd>lua Snacks.picker.lsp_incoming_calls()<cr>" "󰃷 Incoming Calls")
           (mkKeymap "<leader>lco" "<cmd>lua Snacks.picker.lsp_outgoing_calls()<cr>" "󰃶 Outgoing Calls")
 
-          # Diagnostics via Snacks
-          (mkKeymap "<leader>lx" "<cmd>lua Snacks.picker.diagnostics_buffer()<cr>" "󰅚 Buffer Diagnostics")
-          (mkKeymap "<leader>lX" "<cmd>lua Snacks.picker.diagnostics()<cr>" "󰒡 Workspace Diagnostics")
+          # Diagnostics and lists via Trouble
+          (mkKeymap "<leader>lx" "<cmd>Trouble diagnostics toggle filter.buf=0<cr>" "󰅚 Buffer Diagnostics")
+          (mkKeymap "<leader>lX" "<cmd>Trouble diagnostics toggle<cr>" "󰒡 Workspace Diagnostics")
+          (mkKeymap "<leader>ll" "<cmd>Trouble loclist toggle<cr>" "󰋇 Location List")
+          (mkKeymap "<leader>lq" "<cmd>Trouble qflist toggle<cr>" "󰁨 Quickfix List")
 
           # Native LSP actions
           (mkKeymap "<leader>la" "<cmd>lua vim.lsp.buf.code_action()<cr>" "󰌵 Code Action")
@@ -78,12 +80,12 @@
                       nixPkgs.expr = "import ${flake}.inputs.pkgs {}";
                       formatting.command = [ (lib.getExe pkgs.nixfmt) ];
                       options =
-                        if pkgs.stdenv.isLinux then
+                        if pkgs.stdenv.hostPlatform.isLinux then
                           {
                             nixos.expr = "${flake}.nixosConfigurations.${host}.options";
                             home_manager.expr = "${flake}.nixosConfigurations.${host}.options.home-manager.users.type.getSubOptions [ ]";
                           }
-                        else if pkgs.stdenv.isDarwin then
+                        else if pkgs.stdenv.hostPlatform.isDarwin then
                           {
                             nix-darwin.expr = "${flake}.darwinConfigurations.${host}.options";
                             home_manager.expr = "${flake}.darwinConfigurations.${host}.options.home-manager.users.type.getSubOptions [ ]";
@@ -101,6 +103,13 @@
         plugins = {
           none-ls.enable = true;
           nix-develop.enable = true;
+          trouble = {
+            enable = true;
+            settings = {
+              auto_close = true;
+              focus = true;
+            };
+          };
         };
 
         extraConfigLuaPost = ''

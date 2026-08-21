@@ -19,7 +19,7 @@
       home.packages = with pkgs; [ jetbrains.clion ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "clion.desktop" ];
+          core.setFavoriteApps = [ "clion.desktop" ];
         };
       };
     };

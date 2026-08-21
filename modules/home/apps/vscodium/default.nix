@@ -39,7 +39,7 @@
       home.packages = with pkgs; [ nixfmt ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [
+          core.setFavoriteApps = [
             "codium.desktop"
           ];
         };

@@ -83,6 +83,8 @@
               command = lib.getExe' pkgs.clang-tools "clang-format";
             };
           };
+
+          test.adapters.ctest.enable = true;
         };
       };
     };

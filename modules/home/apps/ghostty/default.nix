@@ -78,7 +78,7 @@
 
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "com.mitchellh.ghostty.desktop" ];
+          core.setFavoriteApps = [ "com.mitchellh.ghostty.desktop" ];
         };
       };
     };

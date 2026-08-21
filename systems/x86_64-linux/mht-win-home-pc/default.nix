@@ -9,6 +9,9 @@ let
 in
 {
   ${namespace} = {
+    apps = {
+      nh.enable = true;
+    };
     infra = {
       wsl = {
         enable = true;

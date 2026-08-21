@@ -2,6 +2,7 @@
 let
   supportedDesktopManagers = {
     gnome = "gnome";
+    kde = "kde";
     none = "none";
   };
 in

@@ -1,5 +1,4 @@
 {
-  config,
   osConfig ? { },
   namespace,
   lib,
@@ -14,30 +13,14 @@
       acceptedList = [ "default" ];
       default = "default";
     };
-    setFavoriteApps = lib.${namespace}.makeListOption {
-      ofType = lib.types.str;
-      default = [ ];
-    };
   };
 
-  config =
-    let
-      inherit (config.${namespace}.infra.desktop-manager) gnome;
-    in
-    {
-      ${namespace}.infra.desktop-manager.gnome = {
-        enabled = lib.mkForce (osConfig.${namespace}.infra.desktop-manager.engine == "gnome");
-      };
-      dconf = lib.mkIf gnome.enabled {
-        enable = true;
-        settings = {
-          "org/gnome/shell" = {
-            favorite-apps = gnome.setFavoriteApps;
-          };
-        };
-      };
-      xdg = {
-        enable = true;
-      };
+  config = {
+    ${namespace}.infra.desktop-manager.gnome = {
+      enabled = lib.mkForce (osConfig.${namespace}.infra.desktop-manager.engine == "gnome");
     };
+    xdg = {
+      enable = true;
+    };
+  };
 }

@@ -2,7 +2,6 @@
   config,
   namespace,
   lib,
-  pkgs,
   ...
 }:
 {
@@ -52,7 +51,6 @@
           completeopt = "popup,nearest";
         };
         dependencies.ripgrep.enable = true;
-        extraPackages = with pkgs; [ ];
         plugins = {
           luasnip.enable = true;
           blink-cmp = {
@@ -72,6 +70,12 @@
                   "snippets"
                   "buffer"
                 ];
+                providers = {
+                  lsp.score_offset = 100;
+                  snippets.score_offset = 85;
+                  path.score_offset = 80;
+                  buffer.score_offset = 75;
+                };
               };
               keymap = {
                 preset = "super-tab";

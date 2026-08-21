@@ -88,7 +88,9 @@
           "privacy.trackingprotection.socialtracking.enabled" = true;
           "privacy.trackingprotection.cryptomining.enabled" = true;
           "privacy.trackingprotection.fingerprinting.enabled" = true;
-          "privacy.resistFingerprinting.enabled" = false;
+          "privacy.resistFingerprinting" = false;
+          "privacy.fingerprintingProtection" = true;
+          "privacy.fingerprintingProtection.overrides" = "+AllTargets";
           "privacy.firstparty.isolate" = true;
           "privacy.query_stripping.enabled" = true;
           "privacy.query_stripping.strip_list" =
@@ -114,7 +116,7 @@
 
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "librewolf.desktop" ];
+          core.setFavoriteApps = [ "librewolf.desktop" ];
         };
       };
     };

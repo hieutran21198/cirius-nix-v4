@@ -2,18 +2,30 @@
   config,
   namespace,
   lib,
+  host,
   ...
 }:
 {
   options.${namespace}.containers.sonarqube =
     let
       inherit (lib.${namespace}) makeListOption makeIntOption makeStrOption;
+      subDomain = "sonarqube";
     in
     {
       enable = lib.mkEnableOption "Enable sonarqube";
       port = makeIntOption {
         default = 2001;
         description = "Port to be used by the container";
+      };
+      iam = {
+        group = makeStrOption {
+          default = "sonarqube";
+          description = "Group to be used by the container";
+        };
+      };
+      virtualHost = makeStrOption {
+        default = "${subDomain}.${host}";
+        description = "Virtual host to be used by the container";
       };
       version = makeStrOption {
         default = "community";
@@ -47,24 +59,53 @@
     let
       opts = config.${namespace}.containers.sonarqube;
     in
-    lib.mkIf opts.enable {
-      systemd.tmpfiles.rules = [
-        "d ${opts.dataDir} 0750 1000 0 -"
-        "d ${opts.logDir} 0750 1000 0 -"
-        "d ${opts.extensionsDir} 0750 1000 0 -"
-      ];
-
-      virtualisation.oci-containers.containers = {
-        sonarqube = {
-          image = "sonarqube:${opts.version}";
-          ports = [ "127.0.0.1:${toString opts.port}:9000" ];
-          volumes = [
-            "${opts.extensionsDir}:/opt/sonarqube/extensions"
-            "${opts.dataDir}:/opt/sonarqube/data"
-            "${opts.logDir}:/opt/sonarqube/logs"
-          ];
-          inherit (opts) dependsOn environmentFiles;
+    lib.mkMerge [
+      # IAM configuration for sonarqube container
+      (lib.mkIf opts.enable {
+        ${namespace}.infra.iam = {
+          groups = {
+            "${opts.iam.group}" = {
+              gid = 991;
+            };
+          };
         };
-      };
-    };
+
+        # 2770; bit 2 is setgid directory
+        systemd.tmpfiles.rules = [
+          "d ${opts.dataDir} 2770 root ${opts.iam.group} -"
+          "d ${opts.logDir} 2770 root ${opts.iam.group} -"
+          "d ${opts.extensionsDir} 2770 root ${opts.iam.group} -"
+        ];
+      })
+
+      # configuration for sonarqube container
+      (lib.mkIf opts.enable {
+        virtualisation.oci-containers.containers = {
+          sonarqube = {
+            image = "sonarqube:${opts.version}";
+            ports = [ "127.0.0.1:${toString opts.port}:9000" ];
+            extraOptions = [
+              "--group-add=${toString config.users.groups.${opts.iam.group}.gid}"
+            ];
+            volumes = [
+              "${opts.extensionsDir}:/opt/sonarqube/extensions"
+              "${opts.dataDir}:/opt/sonarqube/data"
+              "${opts.logDir}:/opt/sonarqube/logs"
+            ];
+            inherit (opts) dependsOn environmentFiles;
+          };
+        };
+      })
+
+      # Networking configuration for sonarqube container
+      (lib.mkIf opts.enable {
+        ${namespace}.infra.networking = {
+          hosts."127.0.0.1" = [ opts.virtualHost ];
+          virtualHosts.${opts.virtualHost}.extraConfig = ''
+            tls internal
+            reverse_proxy 127.0.0.1:${toString opts.port}
+          '';
+        };
+      })
+    ];
 }

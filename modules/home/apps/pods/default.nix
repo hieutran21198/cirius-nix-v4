@@ -29,7 +29,7 @@ in
       home.packages = with pkgs; [ pods ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [
+          core.setFavoriteApps = [
             "com.github.marhkb.Pods.desktop"
           ];
         };

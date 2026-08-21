@@ -2,6 +2,7 @@
   lib,
   config,
   namespace,
+  pkgs,
   ...
 }:
 {
@@ -13,6 +14,9 @@
       inherit (config.${namespace}) infra;
     in
     lib.mkIf infra.nvidia.enable {
+      environment.systemPackages = with pkgs; [
+        nvtopPackages.nvidia
+      ];
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         graphics.enable = lib.mkForce true;

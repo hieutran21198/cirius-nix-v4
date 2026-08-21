@@ -38,7 +38,7 @@
                 async = true;
                 module = "blink-cmp-copilot";
                 name = "copilot";
-                score_offset = 100;
+                score_offset = 95;
               };
             };
           };

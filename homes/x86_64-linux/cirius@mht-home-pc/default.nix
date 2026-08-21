@@ -11,6 +11,8 @@
     ./secrets-default.nix
     ./secrets-buuuk.nix
     ./secrets-shared.nix
+
+    ./kde/default.nix
   ];
   home = {
     sessionVariables = {
@@ -33,9 +35,9 @@
             icon = ../../../assets/dockhand.ico;
           };
           opendesign = {
-            class = "opendesign.${host}";
+            class = "design.${host}";
             name = "Open Design";
-            url = "https://opendesign.${host}";
+            url = "https://design.${host}";
             categories = [ "Development" ];
             # curl -L https://opendesign.mht-home-pc/app-icon.svg -o assets/opendesign.ico
             icon = ../../../assets/opendesign.ico;
@@ -81,39 +83,66 @@
         };
       };
       shell = {
-        fish.shellAbbrs = {
-          rbnix = ''
-            sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-home-pc
-          '';
-          gco = "git checkout";
-          gpl = "git pull origin";
-          gps = "git push origin";
-          gaa = "git add .";
-          gcm = "git commit -m";
-          nixgens = "sudo nix-env --profile /nix/var/nix/profiles/system --list-generations";
-          delgens = "sudo nix-env --profile /nix/var/nix/profiles/system --delete-generations old";
-          cleanstore = "sudo nix-store --gc";
-        };
+        fish.shellAbbrs =
+          let
+            host = "mht-home-pc";
+            dotHome = "${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4";
+            nr = ''
+              nix repl --repl-overlays \
+                ${dotHome}/repl.${config.home.username}.${host}.nix \
+                ${dotHome}
+            '';
+          in
+          {
+            rbnix = ''
+              nh os switch ${dotHome}#${host}
+            '';
+            gco = "git checkout";
+            gpl = "git pull origin";
+            gps = "git push origin";
+            gaa = "git add .";
+            gcm = "git commit -m";
+            nixgens = "sudo nix-env --profile /nix/var/nix/profiles/system --list-generations";
+            delgens = "sudo nix-env --profile /nix/var/nix/profiles/system --delete-generations old";
+            cleanstore = "sudo nix-store --gc";
+            inherit nr;
+            nri = "${nr} --impure";
+          };
       };
       desktop-manager = {
+        core = {
+          wallpaper = {
+            default = ../../../assets/halloween-backiee-5K.jpg;
+            dark = ../../../assets/halloween-backiee-5K.jpg;
+          };
+          blurEffect = {
+            enable = true;
+          };
+        };
         gnome = {
           profile = "default";
-          profile-default = {
-            wallpaper = {
-              default = ../../../assets/halloween-backiee-5K.jpg;
-              dark = ../../../assets/halloween-backiee-5K.jpg;
-            };
-            blurEffect = {
-              enable = true;
-            };
-            extensions = [ ];
-          };
+        };
+        kde = {
+          profile = "default";
         };
       };
     };
 
     services = {
-      opensnitch.enable = true;
+      opensnitch.enable = false;
+      flatpak.enable = true;
+      autossh = {
+        enable = true;
+        portForwardingProfiles = {
+          BuuukDevBas = {
+            enable = true;
+          };
+          FirstLuxuryBas = {
+            enable = true;
+            passwordFile = config.sops.secrets."buuuk/first-luxury-bas/password".path;
+          };
+        };
+      };
       syncthing = {
         enable = true;
         username = config.snowfallorg.user.name;
@@ -278,138 +307,93 @@
       };
     };
 
-    apps = {
-      starship.enable = true;
-      btop.enable = true;
-      mailspring = {
-        enable = true;
-      };
-      dialect-translator = {
-        enable = true;
-      };
-      fabric = {
-        enable = true;
-      };
-      podman = {
-        enable = true;
-      };
-      pods = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      zoxide = {
-        enable = true;
-      };
-      bruno = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      obsidian = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      ghostty = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      aws-cli.enable = true;
-      vscodium = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      direnv.enable = true;
-      devenv.enable = true;
-      goland = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      datagrip = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      telegram.enable = true;
-      dbeaver.enable = true;
-      scrcpy.enable = true;
-      antares.enable = true;
-      clion = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      qemu.enable = true;
-      gparted.enable = true;
-      proton-pass = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      fastfetch.enable = true;
-      nvim.enable = true;
-      markdown-toolchain.enable = true;
-      cpp-toolchain.enable = true;
-      go-toolchain.enable = true;
-      nodejs-toolchain.enable = true;
-      ms-teams.enable = true;
-      only-office = {
-        enable = true;
-        markAsFavorite = true;
-      };
-      fzf.enable = true;
-      ai = {
-        pi.enable = true;
-        claude.enable = true;
-        codex = {
-          enable = true;
+    apps =
+      (lib.mapAttrs (_: config: { enable = true; } // config) {
+        ark = { };
+        spotify = { };
+        uget = { };
+        brave = { };
+        kget = { };
+        motrix = { };
+        eza = { };
+        rnote = { };
+        edge = { };
+        mission-center = { };
+        antimicrox = { };
+        book-converter = { };
+        gopeed = { };
+        xh = { };
+        comma = { };
+        nix-index = { };
+        nix-tree = { };
+        jnv = { };
+        atuin = { };
+        starship = { };
+        btop = { };
+        podman = { };
+        pods = {
+        };
+        zoxide = { };
+        bruno = {
           markAsFavorite = true;
         };
-        opencode.enable = true;
-        opendesign.enable = true;
-        jules.enable = true;
-        antigravity.enable = true;
-        copilot.enable = true;
-        reasonix.enable = true;
-      };
-      discord.enable = true;
-      yt-dlp.enable = true;
-      ai-assistant = {
-        # TODO: missing aioncore
-        aionui.enable = false;
-        hermes.enable = false;
-      };
-      slack.enable = true;
-      ai-utilities = {
-        codegraph.enable = true;
-      };
-      chamber.enable = true;
-      aws-vault.enable = true;
-      localsend.enable = true;
-      android-utils.enable = true;
-      librewolf = {
-        enable = true;
-        markAsFavorite = true;
-        persistFingerprint = true;
-        enableSidebarTabs = true;
-        containers = {
-          uit = {
-            id = 1;
-            color = "blue";
-            icon = "briefcase";
-          };
-          buuuk = {
-            id = 2;
-            color = "red";
-            icon = "circle";
-          };
+        obsidian = {
+          markAsFavorite = true;
         };
-        extensions =
-          let
-            videoDownloadHelper = pkgs.firefox-addons.video-downloadhelper;
-          in
-          {
-            ${videoDownloadHelper.addonId} = {
-              package = pkgs.firefox-addons.video-downloadhelper;
-              settings = { };
-            };
-          };
+        ghostty = {
+        };
+        aws-cli = { };
+        vscodium = {
+        };
+        direnv = { };
+        devenv = { };
+        goland = {
+        };
+        datagrip = {
+          markAsFavorite = true;
+        };
+        telegram = { };
+        scrcpy = { };
+        clion = {
+        };
+        qemu = { };
+        gparted = { };
+        proton-pass = {
+          markAsFavorite = true;
+        };
+        fastfetch = { };
+        nvim = { };
+        markdown-toolchain = { };
+        cpp-toolchain = { };
+        go-toolchain = { };
+        nodejs-toolchain = { };
+        ms-teams = { };
+        only-office = {
+          markAsFavorite = true;
+        };
+        fzf = { };
+        super-productivity = { };
+        whisper = { };
+        discord = { };
+        yt-dlp = { };
+        slack = { };
+        chamber = { };
+        aws-vault = { };
+        android-utils = { };
+      })
+      // {
+        ai = (
+          lib.mapAttrs (_: config: { enable = true; } // config) {
+            deepseek = { };
+            claude = { };
+            codex = { };
+            opencode = { };
+            copilot = { };
+          }
+        );
+        ai-utilities = {
+          codegraph = { };
+        };
       };
-    };
   };
 }

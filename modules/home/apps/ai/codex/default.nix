@@ -3,7 +3,7 @@
   namespace,
   pkgs,
   lib,
-  osConfig ? { },
+  # osConfig ? { },
   ...
 }:
 {
@@ -15,7 +15,7 @@
   config =
     let
       opts = config.${namespace}.apps.ai.codex;
-      dmEnabled = osConfig.${namespace}.infra.desktop-manager.engine != "none";
+      # dmEnabled = osConfig.${namespace}.infra.desktop-manager.engine != "none";
     in
     lib.mkIf opts.enable {
       home = {
@@ -23,19 +23,19 @@
           opts.codexCLIPackage
         ];
       };
-      programs.codexDesktopLinux = lib.mkIf dmEnabled {
-        enable = true;
-        cliPackage = opts.codexCLIPackage;
-        computerUseUi.enable = true;
-        remoteMobileControl.enable = true;
-      };
+      # programs.codexDesktopLinux = lib.mkIf dmEnabled {
+      #   enable = true;
+      #   cliPackage = opts.codexCLIPackage;
+      #   computerUseUi.enable = true;
+      #   remoteMobileControl.enable = true;
+      # };
       ${namespace} = {
         apps.vscodium.extensions."openai.chatgpt" = {
           package = pkgs.nix-vscode-extensions.vscode-marketplace.openai.chatgpt;
         };
-        infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "codex-desktop.desktop" ];
-        };
+        # infra.desktop-manager = {
+        #   core.setFavoriteApps = [ "codex-desktop.desktop" ];
+        # };
       };
     };
 }

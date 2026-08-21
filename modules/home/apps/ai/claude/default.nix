@@ -16,7 +16,6 @@
     lib.mkIf opts.enable {
       home.packages = with pkgs; [
         llm-agents.claude-code
-        claude-monitor
       ];
       ${namespace} = {
         apps.vscodium.extensions."anthropic.claude-code" = {

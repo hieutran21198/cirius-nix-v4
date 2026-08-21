@@ -20,7 +20,7 @@
       ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "teams-for-linux.desktop" ];
+          core.setFavoriteApps = [ "teams-for-linux.desktop" ];
         };
       };
     };

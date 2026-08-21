@@ -19,7 +19,7 @@
     };
     ${namespace} = {
       infra.desktop-manager = {
-        gnome.setFavoriteApps = [ "obsidian.desktop" ];
+        core.setFavoriteApps = [ "obsidian.desktop" ];
       };
     };
   };

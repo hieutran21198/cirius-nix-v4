@@ -27,7 +27,7 @@
       };
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [
+          core.setFavoriteApps = [
             "proton-pass.desktop"
           ];
         };

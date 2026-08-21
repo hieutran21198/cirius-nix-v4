@@ -47,11 +47,6 @@ in
           mode = "0400";
         };
       };
-      templates = {
-        "personal/opendesign/env-file" = {
-          content = "";
-        };
-      };
     };
     services = {
       syncthing = {
@@ -68,7 +63,6 @@ in
         ];
       };
       ai = {
-        opendesign.envFile = sops.templates."personal/opendesign/env-file".path;
         opencode = {
           providerAPIKeys = {
             deepseek = sops.secrets."personal/api-key/deepseek".path;

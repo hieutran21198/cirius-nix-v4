@@ -13,6 +13,7 @@ in
         acceptedList = with supportedDesktopManagers; [
           none
           gnome
+          kde
         ];
         default = supportedDesktopManagers.none;
       };

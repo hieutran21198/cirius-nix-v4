@@ -20,7 +20,7 @@
       ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [
+          core.setFavoriteApps = [
             "onlyoffice-desktopeditors.desktop"
           ];
         };

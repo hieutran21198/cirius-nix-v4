@@ -37,11 +37,17 @@
         enable = infra.zram.enable;
         memoryPercent = infra.zram.percent;
       };
+      programs.coolercontrol.enable = true;
       environment = {
         systemPackages = with pkgs; [
           parted
           util-linux
           systemctl-tui
+          pciutils
+          nvme-cli
+          smartmontools
+          lm_sensors
+          e2fsprogs
         ];
         persistence = lib.mkIf infra.enablePersistence {
           "/persist" = {

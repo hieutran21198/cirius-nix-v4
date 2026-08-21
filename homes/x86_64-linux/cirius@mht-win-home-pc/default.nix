@@ -17,7 +17,7 @@
       shell = {
         fish.shellAbbrs = {
           rbnix = ''
-            sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-win-home-pc
+            nh os switch ${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4#mht-win-home-pc
           '';
           gco = "git checkout";
           gpl = "git pull origin";
@@ -32,6 +32,12 @@
     };
 
     apps = {
+      xh.enable = true;
+      comma.enable = true;
+      nix-index.enable = true;
+      nix-tree.enable = true;
+      jnv.enable = true;
+      atuin.enable = true;
       btop.enable = true;
       fabric = {
         enable = true;

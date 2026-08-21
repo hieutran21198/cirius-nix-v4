@@ -19,7 +19,7 @@
       home.packages = with pkgs; [ bruno ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "bruno.desktop" ];
+          core.setFavoriteApps = [ "bruno.desktop" ];
         };
       };
     };

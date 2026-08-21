@@ -6,7 +6,12 @@
   ...
 }:
 {
-  options.${namespace}.apps.nvim.ai = {
+  options.${namespace}.apps.nvim.utils = {
+    tsParsers = lib.${namespace}.makeListOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Additional parser to be installed";
+    };
   };
 
   config =
@@ -20,14 +25,6 @@
           require('vim._core.ui2').enable()
         '';
         keymaps = [
-          (mkKeymap "<esc>" "<cmd>nohlsearch<cr>" {
-            mode = [ "n" ];
-            options = {
-              silent = true;
-              nowait = true;
-              desc = "  Clear highlight";
-            };
-          })
         ]
         ++ (lib.optionals opts.enableLeaderOrientedKeymaps [
           (mkKeymap "<leader>q" "<cmd>xa<cr>" " 󰩈 Save all and close")
@@ -50,6 +47,7 @@
             highlight.enable = true;
             indent.enable = true;
             folding.enable = false;
+            nixGrammars = true;
           };
           lualine = {
             enable = true;

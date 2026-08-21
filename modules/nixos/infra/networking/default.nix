@@ -2,6 +2,7 @@
   config,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 {
@@ -48,6 +49,10 @@
       inherit (config.${namespace}) infra;
     in
     lib.mkIf infra.networking.enable {
+      environment.systemPackages = with pkgs; [
+        iw
+        ethtool
+      ];
       networking = {
         networkmanager = {
           enable = true;

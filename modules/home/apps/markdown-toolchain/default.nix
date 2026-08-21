@@ -7,7 +7,7 @@
 }:
 {
   options.${namespace}.apps.markdown-toolchain = {
-    enable = lib.mkEnableOption "Enable the markdown toolchain (markdownlint, markdown-toc, and render-markdown).";
+    enable = lib.mkEnableOption "Enable the markdown toolchain (Marksman, markdownlint, markdown-toc, and render-markdown).";
   };
 
   config =
@@ -21,6 +21,32 @@
         markdownlint-cli
         markdown-toc
       ];
+
+      ${namespace}.apps.nvim = {
+        extraPackagesAfter = [
+          pkgs.marksman
+        ];
+
+        lsp.servers.marksman = {
+          enable = true;
+          package = pkgs.marksman;
+          packageFallback = true;
+          config = {
+            cmd = [
+              (lib.getExe pkgs.marksman)
+              "server"
+            ];
+            filetypes = [
+              "markdown"
+              "markdown.mdx"
+            ];
+            root_markers = [
+              ".marksman.toml"
+              ".git"
+            ];
+          };
+        };
+      };
 
       programs.nixvim = lib.mkIf nvimOpts.enable {
         keymaps =
@@ -43,6 +69,8 @@
                 "c"
                 "t"
               ];
+
+              preset = "obsidian";
 
               file_types = [
                 "markdown"

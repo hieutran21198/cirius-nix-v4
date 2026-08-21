@@ -7,6 +7,7 @@
 {
   options.${namespace}.apps.nvim.ai = {
     setCompletionCap = lib.${namespace}.makeIntOption { default = 0; };
+    enabledMinuet = lib.${namespace}.makeBoolOption { default = false; };
     defaultOpenAIFIMCompatible = lib.${namespace}.makeAttrsOption {
       default = { };
     };
@@ -38,7 +39,7 @@
                 Deepseek = "";
               };
             };
-            sources = {
+            sources = lib.mkIf nvim.ai.enabledMinuet {
               default = [ "minuet" ];
               providers = {
                 minuet = {
@@ -46,7 +47,7 @@
                   module = "minuet.blink";
                   async = true;
                   timeout_ms = 3000;
-                  score_offset = 50;
+                  score_offset = 90;
                 };
               };
             };
@@ -56,7 +57,7 @@
               };
             };
           };
-          minuet = {
+          minuet = lib.mkIf nvim.ai.enabledMinuet {
             enable = true;
             settings = {
               provider = "openai_fim_compatible";

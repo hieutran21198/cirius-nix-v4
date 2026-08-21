@@ -18,7 +18,7 @@
       home.packages = with pkgs; [ jetbrains.datagrip ];
       ${namespace} = {
         infra.desktop-manager = {
-          gnome.setFavoriteApps = [ "datagrip.desktop" ];
+          core.setFavoriteApps = [ "datagrip.desktop" ];
         };
       };
     };
