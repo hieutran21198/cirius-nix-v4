@@ -19,7 +19,7 @@
       home.packages = with pkgs; [ spotify ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "datagrip.desktop" ];
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "datagrip.desktop" ];
         };
       };
     };

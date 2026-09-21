@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     stable.url = "github:NixOS/nixpkgs/nixos-26.05";
+
     # core
     snowfall-flake = {
       url = "github:snowfallorg/flake";
@@ -67,7 +68,6 @@
     zjstatus = {
       url = "github:dj95/zjstatus";
     };
-    open-design.url = "github:nexu-io/open-design";
     open-spec.url = "github:Fission-AI/OpenSpec";
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
@@ -101,6 +101,8 @@
     fcitx5-lotus = {
       url = "github:LotusInputMethod/fcitx5-lotus";
     };
+
+    devenv.url = "github:cachix/devenv";
   };
 
   outputs =
@@ -144,7 +146,7 @@
                 nixos-wsl.nixosModules.default
                 nix-index-database.nixosModules.default
                 eden.nixosModules.default
-                open-design.nixosModules.default
+                nix-flatpak.nixosModules.nix-flatpak
               ])
               ++ crossSystemModules;
 
@@ -163,7 +165,6 @@
             sops-nix.homeModules.sops
             nixvim.homeModules.nixvim
             stylix.homeModules.stylix
-            open-design.homeManagerModules.default
             nix-flatpak.homeManagerModules.nix-flatpak
             codex-desktop-linux.homeManagerModules.default
             nix-index-database.homeModules.default

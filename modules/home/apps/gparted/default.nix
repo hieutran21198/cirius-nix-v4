@@ -18,7 +18,7 @@
       home.packages = with pkgs; [ gparted ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "gparted.desktop" ];
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "gparted.desktop" ];
         };
       };
     };

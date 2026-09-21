@@ -19,7 +19,7 @@
       home.packages = with pkgs; [ jetbrains.goland ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "goland.desktop" ];
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "goland.desktop" ];
         };
       };
     };

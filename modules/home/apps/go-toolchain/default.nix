@@ -166,10 +166,10 @@
             };
             setFormatters = {
               goimports = {
-                command = lib.getExe' pkgs.gotools "goimports";
+                command = "goimports";
               };
               gofumpt = {
-                command = lib.getExe pkgs.gofumpt;
+                command = "gofumpt";
               };
             };
           };

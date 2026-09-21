@@ -66,12 +66,7 @@ in
     };
     services = {
       tailscale.enable = true;
-      open-design.enable = true;
-      aria2 = {
-        enable = true;
-        virtualHost = "aria2.mht-home-pc";
-        rpcSecretFile = sops.secrets."personal/aria2/rpc-secret".path;
-      };
+      flatpak.enable = true;
       music-server = {
         enable = true;
         envFile = sops.templates."personal/music-server/env-file".path;
@@ -208,8 +203,6 @@ in
 
                     serviceGroups = with services; [
                       music-server
-                      aria2
-                      open-design
                     ];
 
                     containerGroups = with containers; [ sonarqube ];

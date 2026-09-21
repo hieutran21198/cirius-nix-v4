@@ -25,12 +25,13 @@ let
             Appearance = {
               overrideElementsMaximized = true;
               widgetButtonsIconsTheme = "Breeze";
-              widgetElements = "windowTitle";
+              widgetElements = "windowIcon,windowTitle";
               widgetFillWidth = true;
               widgetToolTipMode = "MaximizedWindow";
               windowTitleUndefined = "Cirius Nix v4";
               windowTitleMaximumWidth = 300;
               windowTitleFontBold = false;
+              widgetElementsMaximized = "windowCloseButton,windowMinimizeButton,windowMaximizeButton,windowIcon,windowTitle";
             };
             Behavior = {
               widgetMouseAreaMiddleClickAction = "";
@@ -216,7 +217,6 @@ let
               "org.kde.plasma.notifications"
               "org.kde.kscreen"
               "org.kde.plasma.battery"
-              "org.kde.plasma.bluetooth"
               "org.kde.plasma.brightness"
               "org.kde.plasma.keyboardindicator"
               "org.kde.plasma.keyboardlayout"
@@ -227,6 +227,7 @@ let
             shownItems = [
               "org.kde.plasma.volume"
               "org.kde.plasma.networkmanagement"
+              "org.kde.plasma.bluetooth"
             ];
           };
         };

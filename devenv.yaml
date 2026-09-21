@@ -6,3 +6,9 @@ inputs:
         follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+  # Release nixpkgs providing a working nixd. devenv's wrapper hardcodes a
+  # broken nixd-nightly into PATH (aborts with "Already registered store
+  # 'Dummy Store'"); installing the release build here shadows it because
+  # profile bin/ precedes the wrapper prefix in PATH.
+  nixpkgs-stable:
+    url: github:NixOS/nixpkgs/nixos-26.05

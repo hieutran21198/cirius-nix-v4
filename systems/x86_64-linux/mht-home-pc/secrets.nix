@@ -81,12 +81,7 @@ in
           '';
           restartUnits = [ "NetworkManager-ensure-profiles.service" ];
         };
-        "personal/open-design/env-file" = {
-          content = "";
-        };
       };
     };
-
-    services.open-design.envFile = sops.templates."personal/open-design/env-file".path;
   };
 }

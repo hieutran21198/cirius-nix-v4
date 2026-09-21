@@ -21,6 +21,16 @@ in
           path = "${user.home.directory}/.ssh/personal_git.pub";
           mode = "0400";
         };
+        "personal/azure-devops/prv_key" = {
+          key = "ssh/azure-devops/prv_key";
+          path = "${user.home.directory}/.ssh/personal_azure_devops";
+          mode = "0400";
+        };
+        "personal/azure-devops/pub_key" = {
+          key = "ssh/azure-devops/pub_key";
+          path = "${user.home.directory}/.ssh/personal_azure_devops.pub";
+          mode = "0400";
+        };
         "personal/git/config" = {
           key = "git/config";
           path = "${user.home.directory}/Workspaces/personal/.gitconfig";
@@ -46,9 +56,14 @@ in
           key = "syncthing/password";
           mode = "0400";
         };
+        "personal/aria2/rpc_secret" = {
+          key = "aria2/rpc-secret";
+          mode = "0400";
+        };
       };
     };
     services = {
+      aria2.rpcSecretFile = config.sops.secrets."personal/aria2/rpc_secret".path;
       syncthing = {
         passwordFile = config.sops.secrets."personal/syncthing/password".path;
       };

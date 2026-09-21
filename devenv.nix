@@ -1,6 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 let
   nixFiles = "git ls-files '*.nix' -z";
+  stablePkgs = inputs.nixpkgs-stable.legacyPackages.${pkgs.system};
 in
 {
   packages = with pkgs; [
@@ -12,6 +13,8 @@ in
     statix
     trufflehog
     zizmor
+    # Working nixd that shadows devenv's broken nightly in PATH.
+    stablePkgs.nixd
   ];
 
   scripts = {

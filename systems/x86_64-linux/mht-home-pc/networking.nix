@@ -11,7 +11,6 @@ let
   dockhandHost = "dockhand.${hostName}";
   syncthingHost = "syncthing.${hostName}";
   sunshineHost = "sunshine.${hostName}";
-  aria2Host = "aria2.${hostName}";
 in
 {
   boot.extraModprobeConfig = ''
@@ -53,15 +52,12 @@ in
           dockhandHost
           syncthingHost
           sunshineHost
-          aria2Host
         ];
       };
       # Open ports in the firewall.
       firewall = {
         enable = true;
         allowedTCPPorts = [
-          29110 # Motrix Next
-          29666 # Aria2 Next
         ];
         interfaces.wlp2s0f0u9 = {
           allowedUDPPorts = [

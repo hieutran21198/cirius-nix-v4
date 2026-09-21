@@ -116,7 +116,7 @@
 
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "librewolf.desktop" ];
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "librewolf.desktop" ];
         };
       };
     };

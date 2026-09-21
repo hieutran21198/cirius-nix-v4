@@ -8,6 +8,7 @@
 {
   options.${namespace}.apps.brave = {
     enable = lib.mkEnableOption "Enable brave";
+    markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
   };
 
   config =
@@ -16,5 +17,12 @@
     in
     lib.mkIf opts.enable {
       home.packages = with pkgs; [ brave ];
+      ${namespace} = {
+        infra.desktop-manager = {
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [
+            "brave-browser.desktop"
+          ];
+        };
+      };
     };
 }

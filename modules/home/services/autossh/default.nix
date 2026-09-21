@@ -8,6 +8,12 @@
 {
   options.${namespace}.services.autossh = {
     enable = lib.mkEnableOption "Enable autossh";
+
+    additionalConfig = lib.${namespace}.makeListOption {
+      ofType = with lib.types; either str path;
+      default = [ ];
+      description = "Extra ssh config files to pull in via Include.";
+    };
     # ssh -N profile_name
     portForwardingProfiles = lib.mkOption {
       type =
@@ -53,6 +59,18 @@
     lib.mkMerge [
       # shared configuration
       (lib.mkIf (opts.enable) {
+        services.ssh-agent = {
+          enable = true;
+          defaultMaximumIdentityLifetime = 28800;
+        };
+        programs.ssh = {
+          enable = true;
+          enableDefaultConfig = false;
+          settings."*" = {
+            AddKeysToAgent = "yes";
+          };
+          extraConfig = lib.concatMapStringsSep "\n" (x: "Include ${x}") opts.additionalConfig;
+        };
         home.packages = with pkgs; [ autossh ];
       })
 

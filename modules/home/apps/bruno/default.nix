@@ -19,7 +19,7 @@
       home.packages = with pkgs; [ bruno ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "bruno.desktop" ];
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "bruno.desktop" ];
         };
       };
     };

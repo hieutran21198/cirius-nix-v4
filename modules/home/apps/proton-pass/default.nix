@@ -27,7 +27,7 @@
       };
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [
+          core.setFavoriteApps = lib.mkIf apps.proton-pass.markAsFavorite [
             "proton-pass.desktop"
           ];
         };

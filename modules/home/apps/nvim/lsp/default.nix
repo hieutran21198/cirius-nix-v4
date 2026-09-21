@@ -61,9 +61,18 @@
           servers = {
             nixd = {
               enable = true;
+              # Pin the release build: devenv's wrapper ships a broken
+              # nixd-nightly (aborts with "Already registered store
+              # 'Dummy Store'"), so never resolve nixd from PATH here.
+              package = pkgs.nixd;
               config =
                 let
-                  flake = "(builtins.getFlake (builtins.toString ./.))";
+                  # NOTE: `builtins.toString ./.` would resolve to this
+                  # module's Nix store copy, which has no flake.nix, so
+                  # reference the live checkout instead. nixd only logs
+                  # (no crash) if the path is absent on a given host.
+                  flakeRoot = "${config.home.homeDirectory}/Workspaces/personal/dotfiles/cirius-nix-v4";
+                  flake = "(builtins.getFlake \"${flakeRoot}\")";
                 in
                 {
                   rootMarkers = [
@@ -77,7 +86,9 @@
                   filetypes = [ "nix" ];
                   settings = {
                     nixd = {
-                      nixPkgs.expr = "import ${flake}.inputs.pkgs {}";
+                      # `pkgs.path` is always a valid nixpkgs source,
+                      # unlike a store-path flake reference.
+                      nixPkgs.expr = "import ${pkgs.path} {}";
                       formatting.command = [ (lib.getExe pkgs.nixfmt) ];
                       options =
                         if pkgs.stdenv.hostPlatform.isLinux then

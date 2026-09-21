@@ -9,18 +9,22 @@
     enable = lib.mkEnableOption "Enable obsidian";
     markAsFavorite = lib.mkEnableOption "Mark this app as favorite";
   };
-  config = lib.mkIf config.${namespace}.apps.obsidian.enable {
-    programs.obsidian = {
-      enable = true;
-      cli.enable = true;
-      defaultSettings = {
-        communityPlugins = [ ];
+  config =
+    let
+      opts = config.${namespace}.apps.obsidian;
+    in
+    lib.mkIf opts.enable {
+      programs.obsidian = {
+        enable = true;
+        cli.enable = true;
+        defaultSettings = {
+          communityPlugins = [ ];
+        };
+      };
+      ${namespace} = {
+        infra.desktop-manager = {
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [ "obsidian.desktop" ];
+        };
       };
     };
-    ${namespace} = {
-      infra.desktop-manager = {
-        core.setFavoriteApps = [ "obsidian.desktop" ];
-      };
-    };
-  };
 }

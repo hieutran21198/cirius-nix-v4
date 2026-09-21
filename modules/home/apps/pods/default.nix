@@ -29,7 +29,7 @@ in
       home.packages = with pkgs; [ pods ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [
             "com.github.marhkb.Pods.desktop"
           ];
         };

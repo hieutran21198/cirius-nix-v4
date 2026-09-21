@@ -52,6 +52,17 @@
       ];
     };
 
+    "/home/cirius/Misc" = {
+      device = "/dev/disk/by-uuid/d2c97c79-77ea-42f3-ae52-9f85cbd62879";
+      fsType = "btrfs";
+      options = [
+        "subvol=@misc"
+        "compress=zstd"
+        "noatime"
+        "nofail"
+      ];
+    };
+
     "/mnt/main-data" = {
       device = "/dev/disk/by-uuid/16D3A0ED3E0C06F5";
       fsType = "ntfs3";

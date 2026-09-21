@@ -12,15 +12,15 @@
   };
   config =
     let
-      inherit (config.${namespace}) apps;
+      opts = config.${namespace}.apps.only-office;
     in
-    lib.mkIf apps.only-office.enable {
+    lib.mkIf opts.enable {
       home.packages = with pkgs; [
         onlyoffice-desktopeditors
       ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [
             "onlyoffice-desktopeditors.desktop"
           ];
         };

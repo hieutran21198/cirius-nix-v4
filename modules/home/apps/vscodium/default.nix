@@ -39,7 +39,7 @@
       home.packages = with pkgs; [ nixfmt ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [
+          core.setFavoriteApps = lib.mkIf opts.markAsFavorite [
             "codium.desktop"
           ];
         };

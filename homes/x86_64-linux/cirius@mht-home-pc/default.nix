@@ -129,8 +129,8 @@
     };
 
     services = {
-      opensnitch.enable = false;
       flatpak.enable = true;
+      aria2.enable = true;
       autossh = {
         enable = true;
         portForwardingProfiles = {
@@ -309,19 +309,20 @@
 
     apps =
       (lib.mapAttrs (_: config: { enable = true; } // config) {
+        vlc = { };
+        merkuro = { };
+        rg = { };
         ark = { };
         spotify = { };
         uget = { };
-        brave = { };
-        kget = { };
-        motrix = { };
+        brave = {
+          markAsFavorite = true;
+        };
         eza = { };
         rnote = { };
-        edge = { };
         mission-center = { };
         antimicrox = { };
         book-converter = { };
-        gopeed = { };
         xh = { };
         comma = { };
         nix-index = { };
@@ -331,8 +332,7 @@
         starship = { };
         btop = { };
         podman = { };
-        pods = {
-        };
+        pods = { };
         zoxide = { };
         bruno = {
           markAsFavorite = true;
@@ -340,22 +340,19 @@
         obsidian = {
           markAsFavorite = true;
         };
-        ghostty = {
-        };
+        ghostty = { };
+        blender = { };
+        ldtk = { };
         aws-cli = { };
-        vscodium = {
-        };
+        vscodium = { };
         direnv = { };
         devenv = { };
-        goland = {
-        };
         datagrip = {
           markAsFavorite = true;
         };
         telegram = { };
         scrcpy = { };
-        clion = {
-        };
+        clion = { };
         qemu = { };
         gparted = { };
         proton-pass = {

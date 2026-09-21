@@ -20,7 +20,7 @@
       ];
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "teams-for-linux.desktop" ];
+          core.setFavoriteApps = lib.mkIf apps.ms-teams.markAsFavorite [ "teams-for-linux.desktop" ];
         };
       };
     };

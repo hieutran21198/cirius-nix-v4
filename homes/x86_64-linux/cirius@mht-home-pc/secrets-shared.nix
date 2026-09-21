@@ -9,6 +9,9 @@ let
 in
 {
   ${namespace} = {
+    services.autossh.additionalConfig = [
+      "${user.home.directory}/.ssh/config.d/10-sops.conf"
+    ];
     infra.security = {
       templates = {
         "ssh/config" = {
@@ -19,7 +22,7 @@ in
             # Buuuk configuration
             ${sops.placeholder."buuuk/ssh/config"}
           '';
-          path = "${user.home.directory}/.ssh/config";
+          path = "${user.home.directory}/.ssh/config.d/10-sops.conf";
           mode = "0400";
         };
         "aws/config" = {

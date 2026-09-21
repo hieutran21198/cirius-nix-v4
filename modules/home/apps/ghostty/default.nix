@@ -78,7 +78,7 @@
 
       ${namespace} = {
         infra.desktop-manager = {
-          core.setFavoriteApps = [ "com.mitchellh.ghostty.desktop" ];
+          core.setFavoriteApps = lib.mkIf apps.ghostty.markAsFavorite [ "com.mitchellh.ghostty.desktop" ];
         };
       };
     };
