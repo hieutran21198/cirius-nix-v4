@@ -37,6 +37,17 @@
         enable = infra.zram.enable;
         memoryPercent = infra.zram.percent;
       };
+      programs.nix-ld = {
+        enable = true;
+        libraries = with pkgs; [
+          stdenv.cc.cc
+          zlib
+          openssl
+          curl
+          glib
+          libgcc
+        ];
+      };
       programs.coolercontrol.enable = true;
       environment = {
         systemPackages = with pkgs; [

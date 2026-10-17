@@ -6,84 +6,60 @@
 let
   inherit (config.snowfallorg) user;
   inherit (config) sops;
+  inherit (config.cnix-sec) secret-mgt;
 in
 {
-  ${namespace} = {
-    infra.security = {
-      secrets = {
-        "personal/git/prv_key" = {
-          key = "ssh/git/prv_key";
-          path = "${user.home.directory}/.ssh/personal_git";
-          mode = "0400";
-        };
-        "personal/git/pub_key" = {
-          key = "ssh/git/pub_key";
-          path = "${user.home.directory}/.ssh/personal_git.pub";
-          mode = "0400";
-        };
-        "personal/azure-devops/prv_key" = {
-          key = "ssh/azure-devops/prv_key";
-          path = "${user.home.directory}/.ssh/personal_azure_devops";
-          mode = "0400";
-        };
-        "personal/azure-devops/pub_key" = {
-          key = "ssh/azure-devops/pub_key";
-          path = "${user.home.directory}/.ssh/personal_azure_devops.pub";
-          mode = "0400";
-        };
-        "personal/git/config" = {
-          key = "git/config";
-          path = "${user.home.directory}/Workspaces/personal/.gitconfig";
-          mode = "0400";
-        };
-        "personal/opencode/secured-env" = {
-          key = "ai/opencode/env";
-          mode = "0400";
-        };
-        "personal/api-key/deepseek" = {
-          key = "ai/deepseek/api-key";
-          mode = "0400";
-        };
-        "personal/ssh/config" = {
-          key = "ssh/config";
-          mode = "0400";
-        };
-        "personal/aws/config" = {
-          key = "aws/config";
-          mode = "0400";
-        };
-        "personal/syncthing/password" = {
-          key = "syncthing/password";
-          mode = "0400";
-        };
-        "personal/aria2/rpc_secret" = {
-          key = "aria2/rpc-secret";
-          mode = "0400";
-        };
-      };
+  cnix-sec.secret-mgt.secrets = {
+    "personal/git/prv_key" = {
+      key = "ssh/git/prv_key";
+      path = "${user.home.directory}/.ssh/personal_git";
+      mode = "0400";
     };
-    services = {
-      aria2.rpcSecretFile = config.sops.secrets."personal/aria2/rpc_secret".path;
-      syncthing = {
-        passwordFile = config.sops.secrets."personal/syncthing/password".path;
-      };
+    "personal/git/pub_key" = {
+      key = "ssh/git/pub_key";
+      path = "${user.home.directory}/.ssh/personal_git.pub";
+      mode = "0400";
     };
-    apps = {
-      git = {
-        includes = [
-          {
-            condition = "gitdir:${user.home.directory}/Workspaces/personal/";
-            path = "${user.home.directory}/Workspaces/personal/.gitconfig";
-          }
-        ];
-      };
-      ai = {
-        opencode = {
-          providerAPIKeys = {
-            deepseek = sops.secrets."personal/api-key/deepseek".path;
-          };
-        };
-      };
+    "personal/azure-devops/prv_key" = {
+      key = "ssh/azure-devops/prv_key";
+      path = "${user.home.directory}/.ssh/personal_azure_devops";
+      mode = "0400";
+    };
+    "personal/azure-devops/pub_key" = {
+      key = "ssh/azure-devops/pub_key";
+      path = "${user.home.directory}/.ssh/personal_azure_devops.pub";
+      mode = "0400";
+    };
+    "personal/git/config" = {
+      key = "git/config";
+      path = "${user.home.directory}/Workspaces/personal/.gitconfig";
+      mode = "0400";
+    };
+    "personal/ssh/config" = {
+      key = "ssh/config";
+      mode = "0400";
+    };
+    "personal/aws/config" = {
+      key = "aws/config";
+      mode = "0400";
+    };
+    "personal/syncthing/password" = {
+      key = "syncthing/password";
+      mode = "0400";
+    };
+    "personal/aria2/rpc_secret" = {
+      key = "aria2/rpc-secret";
+      mode = "0400";
     };
   };
+
+  cnix-dev.git.settings.includes = [
+    {
+      condition = "gitdir:${user.home.directory}/Workspaces/personal/";
+      path = "${user.home.directory}/Workspaces/personal/.gitconfig";
+    }
+  ];
+
+  cnix-utils.connectivity.settings.fileSync.settings.credentials.passwordFile =
+    secret-mgt.secrets."personal/syncthing/password".path;
 }

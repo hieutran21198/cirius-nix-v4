@@ -3,13 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    stable.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # core
-    snowfall-flake = {
-      url = "github:snowfallorg/flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     snowfall-lib = {
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,12 +18,9 @@
       url = "github:lnl7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    stylix = {
-      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence = {
@@ -36,10 +28,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs = {
@@ -47,62 +36,83 @@
         home-manager.follows = "home-manager";
       };
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    # applications
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-    };
-    nix-vscode-extensions = {
-      url = "github:nix-community/nix-vscode-extensions";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zjstatus = {
-      url = "github:dj95/zjstatus";
-    };
-    open-spec.url = "github:Fission-AI/OpenSpec";
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    codex-desktop-linux = {
-      url = "github:hieutran21198/codex-desktop-linux";
+    cirius-security = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-security";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
     };
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    eden = {
-      url = "github:Daaboulex/eden-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    deepseek-harness = {
-      url = "github:hieutran21198/deepseek-harness-nix";
+
+    cirius-lib = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-lib";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
       };
     };
 
-    # desktop
-
-    # input methods
-    fcitx5-lotus = {
-      url = "github:LotusInputMethod/fcitx5-lotus";
+    cirius-art = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-art";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
-    devenv.url = "github:cachix/devenv";
+    cirius-dev = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-dev";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-gaming = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-gaming";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-virt = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-virt";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-vn = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-vn";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-office = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-office";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-utils = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-utils";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-visual = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-visual";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    cirius-networking = {
+      url = "github:cirius-nix/cirius-nix-facade/main?dir=flakes/cirius-networking";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   outputs =
@@ -139,22 +149,21 @@
             nixos =
               (with inputs; [
                 sops-nix.nixosModules.sops
-                stylix.nixosModules.stylix
-                fcitx5-lotus.nixosModules.fcitx5-lotus
                 impermanence.nixosModules.impermanence
-                hermes-agent.nixosModules.default
                 nixos-wsl.nixosModules.default
-                nix-index-database.nixosModules.default
-                eden.nixosModules.default
-                nix-flatpak.nixosModules.nix-flatpak
+                cirius-gaming.nixosModules.default
+                cirius-virt.nixosModules.default
+                cirius-vn.nixosModules.default
+                cirius-security.nixosModules.default
+                cirius-utils.nixosModules.default
+                cirius-visual.nixosModules.default
+                cirius-networking.nixosModules.default
               ])
               ++ crossSystemModules;
 
             darwin =
               (with inputs; [
                 sops-nix.darwinModules.sops
-                stylix.darwinModules.stylix
-                nix-index-database.darwinModules.default
               ])
               ++ crossSystemModules;
           };
@@ -163,14 +172,14 @@
         homes = {
           modules = with inputs; [
             sops-nix.homeModules.sops
-            nixvim.homeModules.nixvim
-            stylix.homeModules.stylix
-            nix-flatpak.homeManagerModules.nix-flatpak
-            codex-desktop-linux.homeManagerModules.default
-            nix-index-database.homeModules.default
             plasma-manager.homeModules.plasma-manager
-            zen-browser.homeModules.default
-            deepseek-harness.homeManagerModules.default
+            cirius-art.homeModules.default
+            cirius-dev.homeModules.default
+            cirius-office.homeModules.default
+            cirius-security.homeModules.default
+            cirius-utils.homeModules.default
+            cirius-virt.homeModules.default
+            cirius-visual.homeModules.default
           ];
         };
 

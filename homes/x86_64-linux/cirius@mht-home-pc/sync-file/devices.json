@@ -1,0 +1,22 @@
+{
+  "mht-xiaomi15TPro": {
+    "id": "Y7D3RRJ-C36EN7Z-UMWWFIF-6OVTNCS-7VZ7TLD-RUR7TCQ-YIISMBH-I6ZDEAK",
+    "name": "Minh Hieu Tran Xiaomi 15T Pro",
+    "introducer": false,
+    "skipIntroductionRemovals": false,
+    "address": "dynamic",
+    "paused": false,
+    "autoAcceptFolders": true,
+    "untrusted": false
+  },
+  "thl-samsungS25": {
+    "id": "CGCXLTY-7EDFHTI-Q7OPCJ2-RK4EDPY-RSQK2LG-BU2RRPC-UZGZN5G-JLZ7PQV",
+    "name": "Thanh Hien Le Samsung S25",
+    "introducer": false,
+    "skipIntroductionRemovals": false,
+    "address": "dynamic",
+    "paused": false,
+    "autoAcceptFolders": true,
+    "untrusted": false
+  }
+}

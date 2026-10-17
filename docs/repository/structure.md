@@ -14,6 +14,8 @@ overlays, and host outputs.
 - `modules/cross-system/`: modules shared across supported system targets.
 - `lib/`: custom helper code.
 - `overlays/`: package overrides or generated package sets.
+- `packages/`: flake-local package definitions for software that nixpkgs
+  does not carry, exposed to modules as `pkgs.${namespace}.<name>`.
 - `docs/`: repository knowledge base and operating procedures.
 
 ## Boundaries
@@ -26,3 +28,8 @@ Name modules by capability and keep paths predictable, such as
 `modules/nixos/infra/<feature>/default.nix`.
 
 Snowfall module directories should expose `default.nix`.
+
+Package directories under `packages/` expose `default.nix` too. When a
+package pins an upstream artifact that has no reproducible, versioned URL,
+record how to refresh the pin in a comment next to it, and put any
+multi-step refresh procedure in an `update.sh` beside the derivation.

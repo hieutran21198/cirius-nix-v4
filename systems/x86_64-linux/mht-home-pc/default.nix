@@ -3,6 +3,7 @@
   pkgs,
   namespace,
   lib,
+  host,
   ...
 }:
 let
@@ -15,15 +16,24 @@ let
   stateVersion = "25.11";
 
   inherit (lib.${namespace}) supportedDesktopManagers;
-  inherit (config) sops;
+  inherit (config.cnix-sec) secret-mgt;
 in
 {
   imports = [
     ./hardware-configuration.nix
-    ./edid/virtual-desktop.nix
     ./secrets.nix
     ./storage.nix
     ./networking.nix
+  ];
+
+  # core packages need to be installed.
+  environment.systemPackages = with pkgs; [
+    wget
+    neovim
+    git
+    github-cli
+    jq
+    ripgrep
   ];
 
   # Bootloader.
@@ -32,104 +42,160 @@ in
     efi.canTouchEfiVariables = true;
   };
 
-  # namespace config.
-  ${namespace} = {
-    apps = {
-      nh.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
+  cnix-vn = {
+    enable = true;
+    inputMethod.users = [ "cirius" ];
+  };
+
+  cnix-visual.desktop-environment.use = "kde";
+
+  cnix-utils.unlockKDEWalletByLUKS = config.cnix-sec.secure-store.enable;
+
+  cnix-gaming = {
+    useRecommendedPackages = true;
+    usePlatforms = [
+      "lutris"
+      "steam"
+    ];
+    emulator.useClients = [
+      "eden"
+      "retroarch"
+    ];
+    gamescope = {
+      enable = true;
+      hdr = true;
     };
-    containers = {
-      dockhand = {
-        enable = true;
-        port = 2000;
-        dependsOn = [ "postgres-dockhand" ];
-        environmentFiles = [ sops.secrets."personal/dockhand/env".path ];
+    stream = {
+      enable = true;
+      settings = {
+        port = 47990;
+        users = [ "cirius" ];
+        displayID = "DP-2";
+        origins = [ "https://stream.home.arpa" ];
       };
-      sonarqube = {
-        enable = true;
-        port = 2001;
-        dependsOn = [ "postgres-sonarqube" ];
-        environmentFiles = [ sops.secrets."personal/sonarqube/env".path ];
-      };
-      postgres = {
-        enable = true;
-        databases = {
-          dockhand = {
-            port = 5401;
-            environmentFiles = [ sops.secrets."personal/postgres/dockhand/env".path ];
-          };
-          sonarqube = {
-            port = 5402;
-            environmentFiles = [ sops.secrets."personal/postgres/sonarqube/env".path ];
+    };
+  };
+
+  cnix-virt = {
+    useRecommendedPackages = true;
+
+    container = {
+      enable = true;
+      containers = {
+        dockhand = {
+          enable = true;
+          image = "fnsys/dockhand:8d7ce9eb-baseline";
+          address = "127.0.0.1:2000";
+          dependsOn = [ "postgres-dockhand" ];
+          environmentFiles = [ secret-mgt.secrets."personal/dockhand/env".path ];
+        };
+        postgres = {
+          enable = true;
+          instances.dockhand = {
+            enable = true;
+            image = "postgres:18-alpine";
+            address = "127.0.0.1:5401";
+            environmentFiles = [ secret-mgt.secrets."personal/postgres/dockhand/env".path ];
           };
         };
       };
     };
+
+    virt-desktop = {
+      enable = true;
+      settings = {
+        dir = ./edid;
+        edids."mi15tp60.bin" = {
+          name = "DP-2";
+          mode = "e";
+        };
+      };
+    };
+  };
+
+  # sudo cp /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt ./assets/caddy-root.crt
+  cnix-sec = {
+    pki.certificateFiles = [ ../../../assets/caddy-root.crt ];
+    secret-mgt = {
+      enable = true;
+      settings = {
+        ageKeyFile = "/mnt/secure-store/host/sops-age/key.txt";
+        defaultSecretFile = ../../../secrets/${host}/default.yaml;
+      };
+    };
+    secure-store = {
+      enable = true;
+      settings = {
+        name = "secure-store";
+        luksDevicePath = "/dev/disk/by-uuid/a0b01d1b-4e4a-43b8-af99-888be9694e1d";
+        mountPoint = {
+          fsType = "btrfs";
+          options = [
+            "ro"
+            "nodev"
+            "nosuid"
+            "noexec"
+            "compress=zstd"
+            "noatime"
+          ];
+        };
+      };
+    };
+  };
+
+  cnix-net = {
+    enable = true;
+    settings = {
+      hostName = "mht-home-pc";
+      hosts = {
+        "127.0.0.1" = [
+          {
+            localDomain = "container.home.arpa";
+            extraConfig = "tls internal";
+            upstream = config.cnix-virt.container.containers.dockhand.address;
+          }
+          {
+            localDomain = "sync.home.arpa";
+            extraConfig = "tls internal";
+            upstream = "localhost:2002";
+          }
+          {
+            localDomain = "stream.home.arpa";
+            extraConfig = "tls internal";
+            proxyExtraConfig = ''
+              transport http {
+                tls_insecure_skip_verify
+              }
+            '';
+            upstream = "https://localhost:${toString (config.cnix-gaming.stream.settings.port + 1)}";
+          }
+        ];
+      };
+      vpn.enable = true;
+    };
+  };
+
+  # namespace config.
+  ${namespace} = {
     services = {
-      tailscale.enable = true;
-      flatpak.enable = true;
       music-server = {
         enable = true;
-        envFile = sops.templates."personal/music-server/env-file".path;
+        envFile = secret-mgt.templates."personal/music-server/env-file".path;
         musicDir = "/mnt/main-data/Music";
       };
       cloudflare-warp.enable = true;
-      gaming = {
-        enable = true;
-        stream = {
-          enable = true;
-          users = [ "cirius" ];
-          displayID = "1";
-          applications =
-            let
-              steamPackage = config.programs.steam.package;
-            in
-            [
-              { name = "Desktop"; }
-              {
-                name = "steam-sb";
-                prep-cmd = [
-                  { do = "/home/cirius/Workspaces/SteamGG/_Mods/stellar-blade-mods.sh default"; }
-                ];
-                cmd = "${lib.getExe steamPackage} -gamepadui";
-                wait-all = true;
-                auto-detach = true;
-              }
-              {
-                name = "steam-sb-alt";
-                prep-cmd = [
-                  {
-                    do = "/home/cirius/Workspaces/SteamGG/_Mods/stellar-blade-mods.sh alt";
-                    undo = "/home/cirius/Workspaces/SteamGG/_Mods/stellar-blade-mods.sh default";
-                  }
-                ];
-                cmd = "${lib.getExe steamPackage} -gamepadui";
-                wait-all = true;
-                auto-detach = true;
-              }
-            ];
-        };
-        gamescope = {
-          enable = true;
-          enableHDR = false;
-        };
-        emulator = {
-          eden = {
-            enable = true;
-          };
-        };
-      };
-      hermes = {
-        enable = false;
-        envFiles = [ sops.templates."personal/hermes/env-file".path ];
-      };
-      opensnitch.enable = false;
     };
 
     infra = {
       nix = {
-        package = pkgs.lixPackageSets.stable.lix;
+        # package = pkgs.lixPackageSets.stable.lix;
         extraOptions = ''
-          !include ${sops.secrets."personal/nix/extra-options".path}
+          !include ${secret-mgt.secrets."personal/nix/extra-options".path}
         '';
         settings = {
           allowed-users = [ "cirius" ];
@@ -144,38 +210,21 @@ in
             "https://cache.nixos.org"
             "https://cache.nixos-cuda.org"
             "https://nix-community.cachix.org"
-            "https://codex-cli.cachix.org"
             "https://cache.numtide.com"
+            "https://deepseek-harness-nix.cachix.org"
           ];
           trusted-public-keys = [
-            "deepseek-harness-flake.cachix.org-1:X/nyJkoKMvswHStf5hwikOPJRmD9aobzJDqQCLpqqMA="
             "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
             "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+            "deepseek-harness-nix.cachix.org-1:5NrkwLN9veNMhiINtU5ZeV4isXFhFsOwn6Ms7J1M+TA="
           ];
-        };
-      };
-      ai = {
-        llama-cpp.enable = false;
-      };
-      security = {
-        pki = {
-          # sudo cp /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt ./assets/caddy-root.crt
-          certificateFiles = [ ../../../assets/caddy-root.crt ];
         };
       };
       nvidia.enable = true;
+      # Deprecated
       virtualisation = {
         enable = true;
-        distroBox = {
-          enable = true;
-        };
-      };
-      input-method = {
-        enable = true;
-        enableLotus = true;
-        users = [ "cirius" ];
       };
       shell = {
         fish = {
@@ -197,18 +246,14 @@ in
                 extraGroups =
                   let
                     inherit (config.${namespace}) services;
-                    inherit (config.${namespace}) containers;
 
                     groupEnabledPattern = x: lib.optional x.enable x.iam.group;
 
                     serviceGroups = with services; [
                       music-server
                     ];
-
-                    containerGroups = with containers; [ sonarqube ];
                   in
                   (lib.concatMap groupEnabledPattern serviceGroups)
-                  ++ (lib.concatMap groupEnabledPattern containerGroups)
                   ++ [
                     "networkmanager"
                     "wheel"
@@ -224,46 +269,10 @@ in
             };
           };
       };
-      desktop-manager = {
-        enable = true;
-        engine = supportedDesktopManagers.kde;
-        settings = {
-          gnome = { };
-          kde = {
-            useWalletByLUKS = true;
-          };
-        };
-      };
-    };
-  };
-
-  # Set your time zone.
-  time.timeZone = "Asia/Ho_Chi_Minh";
-
-  # Select internationalisation properties.
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "vi_VN";
-      LC_IDENTIFICATION = "vi_VN";
-      LC_MEASUREMENT = "vi_VN";
-      LC_MONETARY = "vi_VN";
-      LC_NAME = "vi_VN";
-      LC_NUMERIC = "vi_VN";
-      LC_PAPER = "vi_VN";
-      LC_TELEPHONE = "vi_VN";
-      LC_TIME = "vi_VN";
     };
   };
 
   security.rtkit.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    wget
-    neovim
-    git
-    github-cli
-  ];
 
   system = {
     inherit stateVersion;

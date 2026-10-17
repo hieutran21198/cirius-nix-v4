@@ -57,7 +57,6 @@
         networkmanager = {
           enable = true;
         };
-        inherit (infra.networking) hostName;
       };
       services = {
         avahi = lib.mkIf infra.networking.avahiEnabled {
@@ -65,12 +64,6 @@
           nssmdns4 = true;
           nssmdns6 = true;
           openFirewall = true;
-        };
-        openssh = {
-          enable = true;
-        };
-        caddy = {
-          enable = true;
         };
       };
 

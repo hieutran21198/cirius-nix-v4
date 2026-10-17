@@ -1,0 +1,37 @@
+{
+  "Zalo": {
+    "url": "https://chat.zalo.me/",
+    "genericName": "Messaging App",
+    "comment": "Zalo is a messaging app that allows users to send messages.",
+    "categories": ["Network"],
+    "className": "zalo"
+  },
+  "NixOS Packages": {
+    "url": "https://search.nixos.org/packages",
+    "genericName": "NixOS Packages Search",
+    "comment": "NixOS Packages is an application that allows users to search for nix packages",
+    "categories": ["Development"],
+    "className": "nixos-packages"
+  },
+  "Stream": {
+    "url": "https://stream.home.arpa",
+    "genericName": "Streaming Service",
+    "comment": "Stream is a streaming service that allows users to playing games.",
+    "categories": ["Network"],
+    "className": "stream"
+  },
+  "Sync": {
+    "url": "https://sync.home.arpa",
+    "genericName": "File Sync Service",
+    "comment": "Sync is a file sync service that allows users to sync files across devices.",
+    "categories": ["Network"],
+    "className": "sync"
+  },
+  "Container": {
+    "url": "https://container.home.arpa",
+    "genericName": "Container Management Service",
+    "comment": "Container is a container management service that allows users to manage containers.",
+    "categories": ["Development"],
+    "className": "container"
+  }
+}
