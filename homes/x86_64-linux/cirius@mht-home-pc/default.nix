@@ -139,6 +139,7 @@ in
         "codex"
         "multica"
         "copilot"
+        "gemini"
       ];
     };
     toolchain = enableAll [
