@@ -174,11 +174,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-art",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -206,11 +206,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-dev",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -231,11 +231,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-gaming",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -255,11 +255,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-lib",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -405,11 +405,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-networking",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -429,11 +429,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-office",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -454,11 +454,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-security",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -482,11 +482,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-utils",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -507,11 +507,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-virt",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -537,11 +537,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-visual",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
@@ -563,11 +563,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-vn",
-        "lastModified": 1793535938,
-        "narHash": "sha256-2l706G0lEOO2+gyasJs7o+VMdiOV3T0ZpkRmKDdRUqU=",
+        "lastModified": 1793683499,
+        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "e022bb4051149b743de4130e1bc3677e172b977e",
+        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
         "type": "github"
       },
       "original": {
