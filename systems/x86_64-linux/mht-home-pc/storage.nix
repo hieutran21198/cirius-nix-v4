@@ -19,6 +19,8 @@
       "home-cirius-Music.mount"
       "home-cirius-Pictures.mount"
       "home-cirius-Videos.mount"
+      "home-cirius-Long-Term-Storaged.mount"
+      "home-cirius-Github-Runners.mount"
     ];
     path = [ pkgs.coreutils ];
     serviceConfig = {
@@ -27,7 +29,7 @@
     script = ''
       set -euo pipefail
 
-      for dir in Documents Music Pictures Videos; do
+      for dir in Documents Music Pictures Videos Long-Term-Storaged Github-Runners; do
         install -d -m 0755 -o cirius -g users "/home/cirius/$dir"
         install -d -m 0755 -o cirius -g users "/mnt/main-data/$dir"
       done
@@ -122,6 +124,32 @@
 
     "/home/cirius/Videos" = {
       device = "/mnt/main-data/Videos";
+      fsType = "none";
+      options = [
+        "bind"
+        "rw"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
+      ];
+    };
+
+    "/home/cirius/Long-Term-Storaged" = {
+      device = "/mnt/main-data/Long-Term-Storaged";
+      fsType = "none";
+      options = [
+        "bind"
+        "rw"
+        "nofail"
+        "x-systemd.requires-mounts-for=/mnt/main-data"
+        "x-systemd.requires=main-data-user-dirs.service"
+        "x-systemd.after=main-data-user-dirs.service"
+      ];
+    };
+
+    "/home/cirius/Github-Runners" = {
+      device = "/mnt/main-data/Github-Runners";
       fsType = "none";
       options = [
         "bind"

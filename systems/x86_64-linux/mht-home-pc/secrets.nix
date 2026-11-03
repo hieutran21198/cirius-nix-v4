@@ -38,6 +38,10 @@ in
         key = "aria2/rpc-secret";
         mode = "0400";
       };
+      "personal/github-runners/cirius-go-platform" = {
+        key = "github-runners/cirius-go-platform";
+        mode = "0400";
+      };
     };
     templates = {
       "personal/music-server/env-file" = {

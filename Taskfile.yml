@@ -1,0 +1,23 @@
+version: "3"
+
+tasks:
+  default:
+    desc: "Default tasks"
+    cmds:
+      - task -l
+  update:facade:
+    desc: "Update cirius nix facade flakes"
+    cmds:
+      - |
+        nix flake update \
+          cirius-security \
+          cirius-lib \
+          cirius-art \
+          cirius-dev \
+          cirius-gaming \
+          cirius-virt \
+          cirius-vn \
+          cirius-office \
+          cirius-utils \
+          cirius-visual \
+          cirius-networking

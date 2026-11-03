@@ -158,6 +158,7 @@
                 cirius-utils.nixosModules.default
                 cirius-visual.nixosModules.default
                 cirius-networking.nixosModules.default
+                cirius-dev.nixosModules.default
               ])
               ++ crossSystemModules;
 

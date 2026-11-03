@@ -24,17 +24,23 @@ in
     ./secrets.nix
     ./storage.nix
     ./networking.nix
+    ./github-runners.nix
   ];
 
   # core packages need to be installed.
-  environment.systemPackages = with pkgs; [
-    wget
-    neovim
-    git
-    github-cli
-    jq
-    ripgrep
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      wget
+      neovim
+      git
+      github-cli
+      jq
+      ripgrep
+    ]
+    ++ (lib.optionals config.${namespace}.infra.nvidia.enable [
+      pkgs.nvidia-container-toolkit
+    ]);
 
   # Bootloader.
   boot.loader = {
@@ -87,6 +93,19 @@ in
     container = {
       enable = true;
       containers = {
+        penpot = {
+          enable = true;
+          version = "2.18";
+          address = "127.0.0.1:9001";
+          publicUri = "https://penpot.home.arpa";
+          flags = [
+            "disable-email-verification"
+            "enable-smtp"
+            "enable-prepl-server"
+            "enable-mcp"
+            "enable-admin-console"
+          ];
+        };
         dockhand = {
           enable = true;
           image = "fnsys/dockhand:8d7ce9eb-baseline";
@@ -155,6 +174,11 @@ in
       hosts = {
         "127.0.0.1" = [
           {
+            localDomain = "penpot.home.arpa";
+            extraConfig = "tls internal";
+            upstream = config.cnix-virt.container.containers.penpot.address;
+          }
+          {
             localDomain = "container.home.arpa";
             extraConfig = "tls internal";
             upstream = config.cnix-virt.container.containers.dockhand.address;
@@ -192,6 +216,11 @@ in
     };
 
     infra = {
+      persistenceDirs = [
+        "/var/lib/docker"
+        "/var/lib/containers"
+        "/var/lib/libvirt"
+      ];
       nix = {
         # package = pkgs.lixPackageSets.stable.lix;
         extraOptions = ''
@@ -222,10 +251,6 @@ in
         };
       };
       nvidia.enable = true;
-      # Deprecated
-      virtualisation = {
-        enable = true;
-      };
       shell = {
         fish = {
           enable = true;
@@ -256,9 +281,10 @@ in
                   (lib.concatMap groupEnabledPattern serviceGroups)
                   ++ [
                     "networkmanager"
+                    "github-runners"
                     "wheel"
-                  ]
-                  ++ (lib.optional config.${namespace}.infra.virtualisation.enable "libvirtd");
+                    "libvirtd"
+                  ];
                 shell = if fish.enable then fish.package else pkgs.bash;
               };
               homeSettings = {

@@ -137,9 +137,9 @@ in
         "opencode"
         "commandcode"
         "codex"
-        "multica"
         "copilot"
         "gemini"
+        "kimi"
       ];
     };
     toolchain = enableAll [
@@ -167,6 +167,11 @@ in
         useRecommendedShortcuts = true;
       };
       power-controls.enable = true;
+      virtual-desktops = {
+        rows = 3;
+        number = 9;
+      };
+      screen-edges.enable = true;
     };
     chrome-webapps = {
       enable = true;
@@ -197,6 +202,7 @@ in
       enable = true;
       remotePackages = {
         flathub.packages = [
+          "org.qbittorrent.qBittorrent"
           "org.freedownloadmanager.Manager"
           "eu.betterbird.Betterbird"
           "com.ranfdev.DistroShelf"
@@ -216,5 +222,14 @@ in
         "org.freedownloadmanager.Manager"
       ]);
     };
+  };
+
+  services.flatpak.overrides.settings = {
+    "org.freedownloadmanager.Manager".Context.filesystems = [
+      "${user.home.directory}/Long-Term-Storaged:rw"
+    ];
+    "org.qbittorrent.qBittorrent".Context.filesystems = [
+      "${user.home.directory}/Long-Term-Storaged:rw"
+    ];
   };
 }

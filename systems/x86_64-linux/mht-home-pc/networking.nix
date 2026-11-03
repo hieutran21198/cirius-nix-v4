@@ -8,9 +8,6 @@ let
   inherit (config) sops;
 
   hostName = "mht-home-pc";
-  # dockhandHost = "dockhand.${hostName}";
-  # syncthingHost = "syncthing.${hostName}";
-  # sunshineHost = "sunshine.${hostName}";
 in
 {
   boot.extraModprobeConfig = ''
@@ -47,13 +44,6 @@ in
       enable = true;
       avahiEnabled = true;
       inherit hostName;
-      # hosts = {
-      #   "127.0.0.1" = [
-      #     dockhandHost
-      #     syncthingHost
-      #     sunshineHost
-      #   ];
-      # };
       # Open ports in the firewall.
       firewall = {
         enable = true;
@@ -70,20 +60,6 @@ in
           ];
         };
       };
-      # virtualHosts = {
-      #   ${dockhandHost}.extraConfig = ''
-      #     tls internal
-      #     reverse_proxy ${config.cnix-virt.container.containers.dockhand.address}
-      #   '';
-      #   ${syncthingHost}.extraConfig = ''
-      #     tls internal
-      #     reverse_proxy 127.0.0.1:2002
-      #   '';
-      #   "${sunshineHost}".extraConfig = ''
-      #     tls internal
-      #     reverse_proxy 0.0.0.0:47990
-      #   '';
-      # };
     };
   };
 }
