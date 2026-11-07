@@ -5,10 +5,6 @@ in
 {
   users.groups.github-runners = { };
 
-  systemd.tmpfiles.rules = [
-    "d /mnt/main-data/Github-Runners 0755 cirius github-runners -"
-    "d /mnt/main-data/Github-Runners/cirius-go-platform 0755 cirius github-runners -"
-  ];
   services.github-runners = {
     cirius-go-platform = {
       enable = true;
@@ -18,7 +14,9 @@ in
         "nixos"
         "x86_64-linux"
       ];
-      workDir = "/mnt/main-data/Github-Runners/cirius-go-platform";
+      # Keep checkout, node_modules and HOME caches off the rotational NTFS disk.
+      # The NixOS runner module cleans this directory on each service start.
+      workDir = "/var/cache/github-runner/cirius-go-platform/work";
       user = "cirius";
       group = "github-runners";
       nodeRuntimes = [ "node24" ];
@@ -36,7 +34,11 @@ in
         CHECKPOINT_DISABLE = "1";
       };
       serviceOverrides = {
-        CacheDirectory = "github-runner/cirius-go-platform/toolcache github-runner/cirius-go-platform/terraform-plugin-cache";
+        CacheDirectory = [
+          "github-runner/cirius-go-platform/work"
+          "github-runner/cirius-go-platform/toolcache"
+          "github-runner/cirius-go-platform/terraform-plugin-cache"
+        ];
       };
     };
   };
