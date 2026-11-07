@@ -23,6 +23,7 @@ in
     ./hardware-configuration.nix
     ./secrets.nix
     ./storage.nix
+    ./family-media.nix
     ./networking.nix
     ./github-runners.nix
   ];

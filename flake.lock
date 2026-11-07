@@ -330,11 +330,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-lib",
-        "lastModified": 1792037769,
-        "narHash": "sha256-xXWgCOPBJpaEEqtxmMWk/fHtNrJ1pi3aea2ioDJKqHY=",
+        "lastModified": 1793962806,
+        "narHash": "sha256-FywybzYt9fhITfVdd01yDVg+jJhi3ID6fUk6SrBnCog=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "733d74c20affaa0726e4a9dd4d804be04d734227",
+        "rev": "5aff21bf6d3a31c0f115191de224ccf4e89818f2",
         "type": "github"
       },
       "original": {
@@ -507,11 +507,11 @@
       },
       "locked": {
         "dir": "flakes/cirius-virt",
-        "lastModified": 1793683499,
-        "narHash": "sha256-+ih5kVHpYjW5TiQXpxFusPQM0mo7N9E5KOu3Leimqxs=",
+        "lastModified": 1794073174,
+        "narHash": "sha256-fBcymTsYIlKCTERepR2HlXEo3q3l9NkjYESyViggfow=",
         "owner": "cirius-nix",
         "repo": "cirius-nix-facade",
-        "rev": "4c8a7ed55f64549b48cab2f430412e0b1c1f49f6",
+        "rev": "1c5817df75b1ef6174b7e4ab8cbba5c727b48d0e",
         "type": "github"
       },
       "original": {
